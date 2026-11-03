@@ -273,20 +273,21 @@ function submitVisitorCheckout(p) {
   ensureReady_();
   const guard = verifyEmployeeCredential_(p || {});
   const visitorId = cleanId_(p.visitorId);
-  const found = rowByKey_(VMS.SHEETS.visitors, 'Visitor ID', visitorId);
-  if (!found) throw new Error('Visitor record was not found.');
-  const visitor = found.object;
-  if (String(visitor.Status).toUpperCase() !== 'CHECKED-IN') throw new Error('This visitor has already been checked out.');
-  const site = activeSiteForGuard_(guard, visitor['Site ID']);
-  const location = validatedLocation_(p, site, 'site');
   const requestId = requestId_(p.requestId);
   const lock = LockService.getDocumentLock();
   lock.waitLock(30000);
   try {
     const duplicate = rowByKey_(VMS.SHEETS.visitors, 'Check-out Request ID', requestId);
-    if (duplicate) return { ok: true, duplicate: true, id: visitorId, message: 'This visitor check-out was already recorded.' };
+    if (duplicate) {
+      if (duplicate.object['Visitor ID'] !== visitorId) {
+        throw new Error('This request identifier was already used for a different visitor.');
+      }
+      return { ok: true, duplicate: true, id: visitorId, message: 'This visitor check-out was already recorded.' };
+    }
     const current = rowByKey_(VMS.SHEETS.visitors, 'Visitor ID', visitorId);
     if (!current || String(current.object.Status).toUpperCase() !== 'CHECKED-IN') throw new Error('Visitor state changed. Reload the active visitor list.');
+    const site = activeSiteForGuard_(guard, current.object['Site ID']);
+    const location = validatedLocation_(p, site, 'site');
     const now = new Date();
     const evidence = saveEvidence_(p.photoDataUrl, 'visitor-checkout', visitorId);
     const row = [

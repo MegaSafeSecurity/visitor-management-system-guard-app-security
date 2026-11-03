@@ -1,5 +1,2 @@
 **/**
-!Code.gs
-!Index.html
-!Logo.html
-!appsscript.json
+!src/**

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ms"><head><base target="_top"><meta charset="utf-8">
+<title>Mega Safe Security Services Sdn Bhd</title>
+<style>
+:root{--navy:#0a1a3a;--navy2:#13264f;--gold:#b8862f;--red:#e11d2a;--bg:#f2f4f8;--ink:#14213d;--mut:#6b7794}
+*{box-sizing:border-box}body{margin:0;font:14px/1.45 "Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+#login{min-height:100vh;display:grid;place-items:center;background:var(--navy)}
+.lb{background:#fff;padding:28px;border-radius:10px;width:min(360px,92vw);text-align:center;border-top:4px solid var(--red)}
+.lb img{height:110px}.lb h2{margin:8px 0 2px;font-size:17px}.lb p{margin:0 0 14px;color:var(--mut);font-size:12px}
+input,select,textarea{width:100%;padding:9px;border:1px solid #cdd3e0;border-radius:6px;font:inherit;margin:4px 0 8px;background:#fff}
+button{cursor:pointer;border:0;border-radius:6px;padding:9px 14px;font:inherit;font-weight:600;background:var(--gold);color:#fff}
+button.r{background:var(--red)}button.g{background:#e5e9f2;color:var(--ink)}button.s{padding:4px 9px;font-size:12px}
+#app{display:none;min-height:100vh}
+aside{position:fixed;inset:0 auto 0 0;width:230px;background:var(--navy);color:#cfd7ea;padding:14px 0;overflow:auto;transition:.2s}
+aside .br{display:flex;gap:10px;align-items:center;padding:0 16px 14px;border-bottom:1px solid #223765;color:#fff;font-weight:700;font-size:12px}
+aside .br img{height:46px}aside a{display:block;padding:10px 18px;cursor:pointer;border-left:3px solid transparent}
+aside a:hover{background:var(--navy2)}aside a.on{background:var(--navy2);border-color:var(--gold);color:#fff;font-weight:600}
+main{margin-left:230px}header{background:#fff;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #dde2ee;position:sticky;top:0;z-index:5}
+header b{color:var(--navy)}#menu{display:none}#c{padding:18px}
+.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.card{background:#fff;border-radius:8px;padding:14px;border:1px solid #e0e5f0}.k .card b{font-size:28px;display:block}.k .card span{color:var(--mut);font-size:12px}
+.k .card.al{border-top:3px solid var(--red)}
+.tw{overflow:auto;background:#fff;border:1px solid #e0e5f0;border-radius:8px}table{border-collapse:collapse;width:100%;min-width:560px}
+th{background:var(--navy);color:#fff;text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap}td{padding:7px 10px;border-top:1px solid #edf0f6;vertical-align:middle}
+tr:nth-child(even) td{background:#f8f9fc}.tb{display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap;align-items:center}.tb input{max-width:260px;margin:0}
+.bd{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;color:#fff}.OK,.Active,.Low{background:#16a34a}.Critical,.Inactive,.High{background:var(--red)}.Understaffed,.Pending,.Medium{background:#d97706}
+.th{height:44px;border-radius:4px;cursor:zoom-in}
+#md{position:fixed;inset:0;background:#0009;display:none;place-items:center;z-index:20;padding:12px}#md>div{background:#fff;border-radius:10px;padding:18px;width:min(480px,100%);max-height:92vh;overflow:auto}
+#almBar{position:fixed;top:0;left:0;right:0;z-index:40;background:var(--red);color:#fff;padding:12px 16px;display:none;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:15px}#almBar button{background:#fff;color:var(--red)}#almBar button.g{background:#ffffff33;color:#fff}
+#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:8px;display:none;z-index:30;max-width:90vw}
+label{font-size:12px;color:var(--mut);font-weight:600}.big{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.big button{padding:18px}
+@media(max-width:800px){aside{transform:translateX(-100%);z-index:15}aside.o{transform:none}main{margin-left:0}#menu{display:inline-block}}
+</style></head><body>
+<div id="login"><div class="lb"><img src="<?!= include('Logo') ?>" alt="Mega Safe"><h2>Mega Safe Security Services Sdn Bhd</h2><p>Guard Tour, Visitor Register &amp; Security Log Book</p>
+<input id="lid" placeholder="No Staf / admin" autocomplete="username"><input id="lpw" type="password" placeholder="PIN" autocomplete="current-password" onkeydown="if(event.key=='Enter')doLogin()"><button id="lbtn" type="button" style="width:100%">Log Masuk</button><div id="l2" style="display:none"><div id="enr" style="font-size:12px;color:#6b7794;text-align:left"></div><input id="lcode" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Kod 6 digit"><button id="lbtn2" type="button" style="width:100%">Sahkan</button></div>
+<pre id="dbg" style="display:none;text-align:left;font-size:10px;color:#6b7794;white-space:pre-wrap;margin:8px 0 0"></pre><div id="lmsg" style="color:#e11d2a;font-size:13px;margin-top:10px;min-height:18px"></div></div></div>
+<div id="app"><aside id="sd"><div class="br"><img src="<?!= include('Logo') ?>"><span>MEGA SAFE<br>SECURITY SERVICES</span></div><nav id="nav"></nav></aside>
+<main><header><div><button id="menu" class="g s" onclick="sd.classList.toggle('o')">☰</button> <b id="ttl"></b></div><div><span id="almHdr" style="color:var(--red);font-weight:700;margin-right:8px"></span><span id="usr"></span> <button class="g s" onclick="doLogout()">Keluar</button></div></header><div id="c"></div></main></div>
+<div id="almBar"><b>⏰ Masa ronda! Imbas checkpoint sekarang.</b><span><button onclick="almGo()">Imbas sekarang</button></span></div>
+<div id="md"><div id="mb"></div></div><div id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<script>
+let T,U,PAGE,PREM=[],QR=null;
+const $=s=>document.querySelector(s),esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function toast(m){var l=document.getElementById('lmsg');if(l&&document.getElementById('login').style.display!='none')l.textContent=m;const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',4000)}
+var EXEC='<?= ScriptApp.getService().getUrl() ?>',TR='gsr';
+function viaFetch(fn,a){return fetch(EXEC,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({fn:fn,t:T||'',a:JSON.stringify(a||{})})}).then(r=>r.text())}
+function rpc(fn,a,ms){return new Promise(r=>{var d=0,to=setTimeout(()=>{if(!d){d=1;toast('Tiada respons dari server.');r(null)}},ms||60000);
+ var ok=x=>{if(d)return;d=1;clearTimeout(to);try{x=JSON.parse(x)}catch(e){toast('Respons server tidak sah. Semak deployment.');return r(null)}if(x.error){toast(x.error);r(null)}else r(x.data)};
+ var bad=e=>{if(d)return;d=1;clearTimeout(to);toast((e&&e.message)||String(e));r(null)};
+ if(TR=='fetch')viaFetch(fn,a).then(ok).catch(bad);else google.script.run.withSuccessHandler(ok).withFailureHandler(bad).rpc(fn,T||'',JSON.stringify(a||{}))})}
+const LBL={PIN:'PIN baharu (6-12 digit, kosongkan jika tidak ditukar)',TwoFA:'Wajib 2FA untuk pegawai ini',PatrolMin:'Selang ronda (minit)',AlarmSec:'Tempoh bunyi alarm (saat, 0 = sehingga ronda dibuat)'};
+const PG={
+ dash:{t:'Dashboard',r:'a'},term:{t:'Terminal Pegawai',r:'g'},
+ Guards:{t:'HR - Pegawai',r:'a',e:1,f:['Name','StaffNo','Phone','Email','Premise:@P','Shift:Shift1|Shift2|Shift3','Status:Active|Inactive','TwoFA:No|Yes','PIN:@S']},
+ Premises:{t:'Premis',r:'a',e:1,f:['Name','Address','PatrolMin:@N','AlarmSec:@N','Status:Active|Inactive']},
+ Checkpoints:{t:'Checkpoint & QR',r:'a',e:1,f:['Premise:@P','Name','Status:Active|Inactive']},
+ Patrol:{t:'Laporan Rondaan',r:'ag'},Attendance:{t:'Kehadiran',r:'ag'},
+ Visitors:{t:'Daftar Pelawat (VMS)',r:'ag',v:1},LogBook:{t:'Security Log Book',r:'ag',l:1},
+ Complaints:{t:'Aduan',r:'a',e:1,f:['Date:@D','Premise:@P','Description:@T','Status:Pending|Justified|Approved|Rejected']},
+ maps:{t:'Peta & Laluan',r:'ag'},AuditLog:{t:'Log Audit',r:'a'},Threats:{t:'Log Ancaman',r:'a'},settings:{t:'Tetapan',r:'a'}};
+window.addEventListener('unhandledrejection',function(e){lg('RALAT: '+(e.reason&&e.reason.message||e.reason))});
+window.onerror=function(m,s,l){lg('RALAT JS: '+m+' b'+l);var t=document.getElementById('toast');t.textContent='Ralat JS: '+m+' (baris '+l+')';t.style.display='block'};
+
+var ALM={on:false,iv:0,sec:0,due:0,off:0,lb:0,ac:null,wl:null,why:''};
+function audioCtx(){try{var A=window.AudioContext||window.webkitAudioContext;if(!ALM.ac&&A)ALM.ac=new A();if(ALM.ac&&ALM.ac.state=='suspended')ALM.ac.resume()}catch(e){}}
+document.addEventListener('click',audioCtx);document.addEventListener('touchstart',audioCtx);
+function beep(n){audioCtx();try{var a=ALM.ac;for(var i=0;i<(n||3);i++){var o=a.createOscillator(),g=a.createGain();o.type='square';o.frequency.value=880;g.gain.value=.25;o.connect(g);g.connect(a.destination);o.start(a.currentTime+i*.35);o.stop(a.currentTime+i*.35+.25)}}catch(e){}try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}}
+async function wake(){try{if(navigator.wakeLock&&ALM.on&&!ALM.wl)ALM.wl=await navigator.wakeLock.request('screen')}catch(e){}}
+async function almSync(){if(!U||U.role!='guard'||!T)return;var d=await rpc('alarm');if(!d)return;ALM.on=!!d.on;ALM.why=d.reason||'';if(d.on){ALM.iv=d.iv;ALM.sec=d.sec;ALM.due=d.due;ALM.off=d.now-Date.now();wake()}almTick()}
+function almStop(){ALM.on=false;ALM.why='';try{ALM.wl&&ALM.wl.release()}catch(e){}ALM.wl=null;var b=document.getElementById('almBar');if(b)b.style.display='none';var h=document.getElementById('almHdr');if(h)h.textContent=''}
+function almGo(){scanUI()}
+function almTick(){var t=document.getElementById('almTxt'),h=document.getElementById('almHdr'),bar=document.getElementById('almBar'),x='',st='Alarm bermula selepas Clock In.';
+ if(U&&U.role=='guard'){
+  if(!ALM.on){bar.style.display='none';x=''}
+  else{var now=Date.now()+ALM.off,l=ALM.due-now;
+   if(l>0){bar.style.display='none';var s=Math.ceil(l/1000),hh=Math.floor(s/3600),mm=Math.floor(s%3600/60),ss=s%60;x='Ronda seterusnya '+(hh?hh+':':'')+String(mm).padStart(2,'0')+':'+String(ss).padStart(2,'0');st='Selang ronda: '+ALM.iv+' minit (ditetapkan admin).'}
+   else{bar.style.display='flex';var over=now-ALM.due;if(ALM.sec==0||over<ALM.sec*1000){if(Date.now()-ALM.lb>8000){ALM.lb=Date.now();beep(3)}x='⏰ MASA RONDA!'}else x='⏰ RONDA TERLEPAS '+Math.floor(over/60000)+' min';st='Alarm hanya berhenti selepas anda mengimbas checkpoint.'}}}
+ if(t)t.innerHTML=(x?'<div style="font-size:18px;font-weight:700">'+x+'</div>':'')+'<div style="color:var(--mut);font-weight:400;font-size:12px;margin-top:2px">'+st+'</div>';if(h)h.textContent=x}
+setInterval(almTick,1000);setInterval(almSync,60000);document.addEventListener('visibilitychange',function(){if(!document.hidden){wake();almSync()}});
+
+var THR={on:0,max:-1};
+function thrStart(){THR.max=-1;THR.on++;thrPoll(THR.on)}
+async function thrPoll(id){if(id!==THR.on||PAGE!='dash'||!U)return;const d=await rpc('feed');if(!d)return;if(id===THR.on&&PAGE=='dash'){thrRender(d);if(THR.max>=0&&d.max>THR.max&&d.latest[0]&&d.latest[0].Level=='High')beep(3);THR.max=d.max}setTimeout(()=>thrPoll(id),5000)}
+function thrRender(d){var el=$('#thr');if(!el)return;var cs=Object.keys(d.cnt).map(k=>`<div class="card"><b>${d.cnt[k]}</b><span>${esc(k)}</span></div>`).join('')||'<div style="color:var(--mut)">Tiada ancaman dikesan dalam 24 jam.</div>';
+ el.innerHTML=`<div class="card" style="margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><b>Analisis Ancaman (24 jam)</b><span><span class="bd ${d.level}">Tahap ${d.level}</span> <small style="color:var(--mut)"><span style="color:#16a34a">●</span> LIVE, kemas kini setiap 5 saat</small></span></div><div class="k" style="margin:10px 0 0">${cs}</div><div class="tw" style="margin-top:10px"><table><tr><th>Masa</th><th>Tahap</th><th>Jenis</th><th>Pengguna</th><th>Butiran</th></tr>${d.latest.map(x=>`<tr><td>${esc(x.Time)}</td><td><span class="bd ${esc(x.Level)}">${esc(x.Level)}</span></td><td>${esc(x.Type)}</td><td>${esc(x.Actor)}</td><td>${esc(x.Detail)}</td></tr>`).join('')||'<tr><td colspan=5>Tiada rekod.</td></tr>'}</table></div></div>`}
+async function reset2fa(k){if(confirm('Set semula peranti pengesah pegawai ini? Pegawai akan mendaftar semula pada log masuk seterusnya.')&&await rpc('reset2fa',{key:k}))toast('2FA disetkan semula')}
+function showMaps(){$('#c').innerHTML=`<div class="card"><b>Ejen Peta Google</b><p style="color:var(--mut);font-size:12px;margin:4px 0 8px">Contoh: <i>laluan dari Kota Kinabalu ke Sandakan</i> | <i>cari balai polis di Tawau</i> | <i>Menara Tun Mustapha</i></p><div class="tb"><input id="mq" style="max-width:420px" placeholder="Taip pertanyaan..." onkeydown="if(event.key=='Enter')mapGo()"><select id="mm" style="max-width:150px;margin:0"><option value="DRIVING">Memandu</option><option value="WALKING">Berjalan</option><option value="TRANSIT">Pengangkutan awam</option><option value="BICYCLING">Berbasikal</option></select><button onclick="mapGo()">Cari</button></div></div><div id="mr2" style="margin-top:12px"></div>`}
+async function mapGo(){const d=await rpc('maps',{q:$('#mq').value,mode:$('#mm').value});if(!d)return;let h='';
+ if(d.type=='route')h=`<div class="card"><b>${esc(d.from)} &rarr; ${esc(d.to)}</b><p>Jarak <b>${esc(d.distance)}</b> | Masa <b>${esc(d.duration)}</b></p><ol>${d.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol><a href="${esc(d.url)}" target="_blank" rel="noopener">Buka di Google Maps</a></div>`;
+ else h=d.items.length?d.items.map(p=>`<div class="card" style="margin-bottom:8px"><b>${esc(p.name)}</b>${p.addr?'<br>'+esc(p.addr):''}${p.rating?'<br>Penilaian: '+esc(p.rating):''}${p.tel?'<br>Tel: '+esc(p.tel):''}<br><a target="_blank" rel="noopener" href="${esc(p.url||('https://www.google.com/maps/search/?api=1&query='+p.lat+','+p.lng))}">Buka di Google Maps</a></div>`).join(''):'<div class="card">Tiada keputusan.</div>';
+ $('#mr2').innerHTML=h}
+async function showSettings(){const s=await rpc('settings');if(!s)return;$('#c').innerHTML=`<div class="card" style="max-width:460px;margin-bottom:14px"><b>Tukar kata laluan Admin</b><p style="color:var(--mut);font-size:12px">Hanya Admin boleh menukar kata laluan. Pegawai tidak boleh menukar PIN sendiri; Admin menetapkannya di menu HR - Pegawai.</p><label>Kata laluan semasa</label><input id="pw0" type="password" autocomplete="current-password"><label>Kata laluan baharu (min 12 aksara)</label><input id="pw1" type="password" autocomplete="new-password"><label>Ulang kata laluan baharu</label><input id="pw2" type="password" autocomplete="new-password"><label>Kod 2FA (6 digit)</label><input id="pw3" inputmode="numeric" maxlength="8"><button onclick="chpw()">Simpan</button></div>
+<div class="card" style="max-width:460px"><b>Sistem</b><p>Versi: ${esc(s.ver)}<br>Google Maps Places API: <b>${s.maps?'Aktif':'Belum ditetapkan (MAPS_KEY)'}</b></p><p><a target="_blank" rel="noopener" href="${esc(s.ss)}">Buka Google Sheet utama</a><br><a target="_blank" rel="noopener" href="${esc(s.rt)}">Buka Google Sheet Log Masa Nyata</a></p></div>`}
+async function chpw(){if($('#pw1').value!=$('#pw2').value)return toast('Kata laluan baharu tidak sepadan.');if(await rpc('chpw',{cur:$('#pw0').value,next:$('#pw1').value,code:$('#pw3').value})){['pw0','pw1','pw2','pw3'].forEach(i=>$('#'+i).value='');toast('Kata laluan admin ditukar.')}}
+function quietLogout(){try{if(TR=='fetch')viaFetch('logout',{}).catch(function(){});else google.script.run.withSuccessHandler(function(){}).withFailureHandler(function(){}).rpc('logout',T,'{}')}catch(e){}}
+function doLogout(){if(T)quietLogout();almStop();T=null;TICKET=null;show2(0);U=null;PAGE=null;closeM();$('#app').style.display='none';$('#login').style.display='';$('#lid').value='';$('#lpw').value='';$('#c').innerHTML='';$('#nav').innerHTML='';$('#usr').textContent='';var m=$('#lmsg'),d=$('#dbg');m.textContent='';if(d)d.textContent='';$('#lid').focus()}
+function lg(s){var d=document.getElementById('dbg');if(d){d.textContent=(d.textContent+'\n'+new Date().toLocaleTimeString()+' '+s).split('\n').slice(-7).join('\n')}}
+var TICKET=null;
+function show2(on,enr){$('#lid').style.display=on?'none':'';$('#lpw').style.display=on?'none':'';$('#lbtn').style.display=on?'none':'';$('#l2').style.display=on?'block':'none';$('#enr').innerHTML=enr||'';$('#lcode').value='';if(on)$('#lcode').focus()}
+function enrUI(d){return '<b>Daftar aplikasi pengesah</b> (Google Authenticator, Microsoft Authenticator atau Authy). Imbas kod QR atau masukkan kunci ini secara manual:<div id="qrbox" style="text-align:center;margin:8px 0"></div><code style="word-break:break-all;display:block;background:#f2f4f8;padding:6px;border-radius:6px">'+esc(d.secret)+'</code><p>Kemudian masukkan kod 6 digit di bawah. Kod dijana di telefon walaupun tiada data internet.</p>'}
+function drawQR(u){try{if(window.qrcode){var q=qrcode(0,'M');q.addData(u);q.make();$('#qrbox').innerHTML=q.createImgTag(4)}}catch(e){}}
+async function doLogin(){var m=$('#lmsg');m.style.color='#6b7794';m.textContent='Sedang log masuk...';
+ try{const d=await rpc('login',{id:$('#lid').value,pin:$('#lpw').value});if(!d){m.style.color='#e11d2a';return}
+ if(d.step){TICKET=d.ticket;show2(1,d.step=='enroll'?enrUI(d):'<b>Pengesahan dua faktor</b><br>Masukkan kod 6 digit daripada aplikasi pengesah anda.');if(d.step=='enroll')drawQR(d.uri);m.textContent='';return}
+ await finishLogin(d)}catch(e){m.style.color='#e11d2a';m.textContent='Ralat: '+e.message}}
+async function doVerify(){var m=$('#lmsg');m.style.color='#6b7794';m.textContent='Mengesahkan...';
+ try{const d=await rpc('verify2fa',{ticket:TICKET,code:$('#lcode').value});if(!d){m.style.color='#e11d2a';if(/tamat|dikunci/.test(m.textContent)){TICKET=null;show2(0)}return}await finishLogin(d)}catch(e){m.style.color='#e11d2a';m.textContent='Ralat: '+e.message}}
+async function finishLogin(d){T=d.token;U=d.user;TICKET=null;const p=await rpc('premises');PREM=p||[];$('#usr').textContent=U.name;
+ $('#nav').innerHTML=Object.keys(PG).filter(k=>PG[k].r.includes(U.role=='admin'?'a':'g')).map(k=>`<a data-k="${k}" onclick="goPage('${k}')">${PG[k].t}</a>`).join('');
+ $('#login').style.display='none';$('#app').style.display='block';$('#lpw').value='';show2(0);$('#lmsg').textContent='';if(U.role=='guard')almSync();await goPage(U.role=='admin'?'dash':'term')}
+async function goPage(k){PAGE=k;sd.classList.remove('o');document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.k==k));$('#ttl').textContent=PG[k].t;$('#c').innerHTML='Memuatkan...';
+ if(k=='dash')return showDash();if(k=='term')return showTerm();if(k=='maps')return showMaps();if(k=='settings')return showSettings();showTable(k)}
+async function showDash(){const d=await rpc('dash');if(!d){$('#c').innerHTML='<div class="card">Gagal memuatkan Dashboard. Tekan menu Dashboard untuk cuba lagi.</div>';return}const c=(n,l,a)=>`<div class="card ${a&&n?'al':''}"><b>${n}</b><span>${l}</span></div>`;
+ $('#c').innerHTML=`<div id="thr"></div><div class="k">${c(d.premises,'Premis aktif')}${c(d.guards,'Pegawai aktif ('+d.inactive+' tidak aktif)')}${c(d.onDuty,'Sedang bertugas')}${c(d.patrolToday,'Rondaan hari ini')}${c(d.visitorsIn,'Pelawat di dalam')}${c(d.complaints,'Aduan belum selesai',1)}</div>
+ <h3>Status Rondaan (Critical = tiada ronda melebihi 2 kali selang)</h3><div class="tw"><table><tr><th>Premis</th><th>Rondaan Terakhir</th><th>Status</th></tr>${d.tour.map(t=>`<tr><td>${esc(t.premise)}</td><td>${esc(t.last)}</td><td><span class="bd ${t.status}">${t.status}</span></td></tr>`).join('')||'<tr><td colspan=3>Tiada premis. Tambah di menu Premis.</td></tr>'}</table></div>`;thrStart()}
+function cell(k,v){if(k=='PhotoURL')return v?`<img class="th" src="${esc(v)}" onclick="zoomImg('${esc(v)}')">`:'';if(k=='Status'||k=='Level')return `<span class="bd ${esc(v)}">${esc(v)}</span>`;if(k=='PIN')return '••••';return esc(v)}
+async function showTable(k){const d=await rpc('list',{sheet:k});if(!d){$('#c').innerHTML='<div class="card">Gagal memuatkan data. Tekan menu untuk cuba lagi.</div>';return}const g=PG[k];DATA=d;
+ $('#c').innerHTML=`<div class="tb"><input id="q" placeholder="Cari..." oninput="filterRows()">${g.e||g.v||g.l?`<button onclick="openForm('${k}')">+ Tambah</button>`:''}${k=='Checkpoints'?'<button class="g" onclick="allQR()">Cetak semua QR</button>':''}${(U.role!='admin'&&k=='Patrol')?'<button onclick="scanUI()">Imbas Checkpoint</button>':''}<button class="g" onclick="goPage('${k}')">Muat semula</button></div>
+ <div class="tw"><table id="tb"><tr>${d.cols.map(c=>`<th>${c}</th>`).join('')}<th></th></tr>${d.rows.map((r,i)=>`<tr>${d.cols.map(c=>`<td>${cell(c,r[c])}</td>`).join('')}<td style="white-space:nowrap">${acts(k,r,i)}</td></tr>`).join('')||`<tr><td colspan=20>Tiada rekod.</td></tr>`}</table></div>`}
+let DATA;function filterRows(){const q=$('#q').value.toLowerCase();document.querySelectorAll('#tb tr').forEach((t,i)=>{if(i)t.style.display=t.textContent.toLowerCase().includes(q)?'':'none'})}
+function acts(k,r,i){let h='';if(PG[k].e)h+=`<button class="s g" onclick="openForm('${k}',${i})">Edit</button> <button class="s r" onclick="doDel('${k}','${esc(r[DATA.cols[0]])}')">Padam</button> `;
+ if(k=='Guards')h+=`<button class="s g" onclick="reset2fa('${esc(r.GuardID)}')">Reset 2FA</button> `;
+ if(k=='Checkpoints')h+=`<button class="s" onclick="showQR('${esc(r.QRCode)}','${esc(r.Name)}','${esc(r.Premise)}')">QR</button>`;
+ if(k=='Visitors'&&!r.TimeOut)h+=`<button class="s" onclick="vout('${r.VisitID}')">Keluar</button>`;return h}
+function zoomImg(u){$('#mb').innerHTML=`<img src="${u.replace('sz=w1000','sz=w1600')}" style="width:100%"><button class="g" style="width:100%;margin-top:8px" onclick="closeM()">Tutup</button>`;md.style.display='grid'}
+function closeM(){md.style.display='none';if(QR){QR.stop().catch(()=>{});QR=null}}
+function opts(s,v){const l=s=='@P'?PREM:s.split('|');return l.map(o=>`<option ${o==v?'selected':''}>${esc(o)}</option>`).join('')}
+function openForm(k,i){const g=PG[k],row=i!=null?DATA.rows[i]:{};let f=g.f;
+ if(g.v)f=['Name','IC','Phone','Vehicle','Purpose','Host',...(U.role=='admin'?['Premise:@P']:[]),'Photo:@F'];
+ if(g.l)f=['Category:Rondaan|Insiden|Kejadian|Serahan Tugas|Kenderaan|Lain-lain',...(U.role=='admin'?['Premise:@P']:[]),'Description:@T','Photo:@F'];
+ $('#mb').innerHTML=`<h3>${g.t}</h3>`+f.map(x=>{const[n,o]=x.split(':');const id='f_'+n;let el=!o?`<input id="${id}" value="${esc(row[n])}">`:o=='@T'?`<textarea id="${id}" rows=3>${esc(row[n])}</textarea>`:o=='@D'?`<input id="${id}" type="date" value="${esc(row[n]||new Date().toISOString().slice(0,10))}">`:o=='@S'?`<input id="${id}" type="password" autocomplete="new-password" inputmode="numeric" maxlength="12">`:o=='@N'?`<input id="${id}" type="number" min="0" value="${esc(row[n]===undefined||row[n]===''?60:row[n])}">`:o=='@F'?`<input id="${id}" type="file" accept="image/*" capture="environment">`:`<select id="${id}">${opts(o,row[n])}</select>`;return `<label>${LBL[n]||n}</label>${el}`}).join('')+`<button onclick="doSubmit('${k}',${i==null?-1:i})">Simpan</button> <button class="g" onclick="closeM()">Batal</button>`;md.style.display='grid'}
+function readImg(inp){return new Promise(r=>{const f=inp&&inp.files[0];if(!f)return r('');const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const s=Math.min(1,1024/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.7))};im.onerror=()=>r('');im.src=u})}
+async function doSubmit(k,i){const g=PG[k],row=i>=0?{...DATA.rows[i]}:{};
+ document.querySelectorAll('#mb [id^=f_]').forEach(e=>{if(e.type!='file')row[e.id.slice(2)]=e.value});
+ let ok;if(g.v||g.l){const photo=await readImg($('#f_Photo'));ok=await rpc(g.v?'visitorAdd':'logAdd',{row,photo})}else ok=await rpc('save',{sheet:k,row});
+ if(ok){closeM();toast('Disimpan');if(k=='Guards'||k=='Premises'){const p=await rpc('premises');PREM=p||PREM}goPage(k)}}
+async function doDel(k,key){if(confirm('Padam rekod ini?')&&await rpc('del',{sheet:k,key})){toast('Dipadam');goPage(k)}}
+async function vout(key){if(await rpc('visitorOut',{key})){toast('Pelawat keluar');goPage('Visitors')}}
+const qurl=(c,s)=>'https://api.qrserver.com/v1/create-qr-code/?size='+s+'x'+s+'&data='+encodeURIComponent(c);
+function showQR(c,n,p){$('#mb').innerHTML=`<div style="text-align:center"><h3>${n}</h3><p>${p}</p><img src="${qurl(c,300)}" width=260><p><code>${c}</code></p><button onclick="window.print()">Cetak</button> <button class="g" onclick="closeM()">Tutup</button></div>`;md.style.display='grid'}
+function allQR(){const w=window.open('');w.document.write('<body style="font-family:Arial;display:flex;flex-wrap:wrap;gap:14px">'+DATA.rows.filter(r=>r.Status!='Inactive').map(r=>`<div style="border:2px solid #b8862f;padding:10px;text-align:center;width:230px"><b>MEGA SAFE SECURITY</b><br><img src="${qurl(r.QRCode,200)}"><br><b>${r.Name}</b><br>${r.Premise}</div>`).join('')+'<script>setTimeout(()=>print(),1200)<\/script>');w.document.close()}
+function showTerm(){$('#c').innerHTML=`<div class="card" style="margin-bottom:12px"><b>${esc(U.name)}</b><br><span style="color:var(--mut)">${esc(U.premise)} · ${esc(U.shift)}</span></div>
+ <div class="card" style="margin-bottom:12px"><b>Alarm Rondaan</b><div id="almTxt" style="margin-top:6px"></div></div>
+ <div class="big"><button onclick="doClock('in')">Clock In</button><button class="r" onclick="doClock('out')">Clock Out</button><button onclick="scanUI()">Imbas QR Checkpoint</button><button onclick="openForm('Visitors')">Daftar Pelawat</button><button class="g" onclick="openForm('LogBook')">Tulis Log Book</button><button class="g" onclick="goPage('Patrol')">Rondaan Saya</button></div>`;almTick()}
+async function doClock(t){const m=await rpc('clock',{type:t});if(m){toast(m);almSync()}}
+function scanUI(){$('#mb').innerHTML=`<h3>Imbas QR Checkpoint</h3><div id="rd" style="width:100%"></div><label>Atau taip kod QR</label><input id="mc" placeholder="MSS|C..."><label>Catatan</label><input id="mr"><label>Gambar bukti</label><input id="mp" type="file" accept="image/*" capture="environment"><button onclick="doScan($('#mc').value)">Hantar</button> <button class="g" onclick="closeM()">Batal</button>`;md.style.display='grid';
+ if(window.Html5Qrcode){QR=new Html5Qrcode('rd');QR.start({facingMode:'environment'},{fps:10,qrbox:200},c=>{$('#mc').value=c;toast('QR dikesan: '+c)}).catch(()=>{$('#rd').textContent='Kamera tidak tersedia, taip kod secara manual.'})}}
+async function doScan(code){if(!code)return toast('Imbas atau taip kod QR');const photo=await readImg($('#mp')),remark=$('#mr').value;
+ const pos=await new Promise(r=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>r(p.coords),()=>r({}),{timeout:5000}):r({}));
+ const m=await rpc('scan',{code,remark,photo,lat:pos.latitude||'',lng:pos.longitude||''});if(m){closeM();toast(m);almSync();if(PAGE=='Patrol')goPage('Patrol')}}
+(async function(){var l=document.getElementById('lmsg');l.style.color='#6b7794';l.textContent='Menyambung ke server...';var d=await rpc('ping',{},6000);
+if(!d){TR='fetch';l.textContent='Cuba sambungan alternatif...';d=await rpc('ping',{},20000)}
+if(d){l.style.color='#16a34a';l.textContent='Server sedia ('+d+', '+TR+')';setTimeout(()=>{l.textContent='';l.style.color='#e11d2a'},3000)}else l.style.color='#e11d2a'})();
+document.getElementById('lbtn').addEventListener('click',doLogin);document.getElementById('lbtn2').addEventListener('click',doVerify);document.getElementById('lcode').addEventListener('keydown',function(e){if(e.key=='Enter')doVerify()});
+</script></body></html>

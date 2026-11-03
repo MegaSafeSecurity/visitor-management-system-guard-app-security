@@ -1,64 +1,113 @@
-# Visitor Management System and Guard App
+# Mega Safe Security Services Sdn Bhd — Guard Tour · VMS · Security Log Book (v5.0)
 
-This package replaces the attached attendance-only design with a Google Sheets-bound VMS and guard app. It is designed for a single source of truth: `Employee ID`, `Site ID`, `Checkpoint ID`, and `Visitor ID` are stable keys. HR may update a guard's name, phone, position, default site, or status without breaking the roster, next QR card, attendance, visitor record, log book, checkpoint history, or report.
+Aplikasi web (Google Apps Script + Google Sheets) untuk rondaan pengawal (QR checkpoint), daftar pelawat (VMS),
+log book keselamatan, kehadiran, roster syif, aduan, ancaman/SOS dan log audit.
+Pangkalan data ialah Google Sheet anda sendiri, jadi setiap rekod/ancaman ditulis terus ke Sheet secara automatik.
 
-## Included
+## Ciri utama
 
-- `VMS_Guard_App_Template.xlsx`: the Google Sheets import template with all operational tabs.
-- `Code.gs`: Apps Script server logic.
-- `index.html`: mobile-friendly Guard App and HR/Admin web UI.
-- `appsscript.json`: Apps Script project settings and scopes.
+| Bidang | Perincian |
+|---|---|
+| Pengesahan | Tiada akses tetamu. Kata laluan disimpan sebagai hash SHA-256 bergaram (2000 pusingan). Kunci 15 minit selepas 5 percubaan gagal. Sesi 6 jam, dibatalkan bila kata laluan ditukar. |
+| Kata laluan | **Hanya Admin** boleh menukar kata laluan pegawai dan admin (Tetapan & Kata Laluan). Pegawai tiada akses menukar. Minimum 8 aksara. |
+| 2FA (TOTP) | Admin: wajib, didaftar semasa log masuk pertama. Pegawai: diaktifkan admin (kod QR dipaparkan sekali). Kod tidak boleh digunakan semula. |
+| Log audit | Sheet `AuditLog`, rantaian hash SHA-256 (setiap rekod mengandungi hash rekod sebelumnya). Butang **Sahkan Integriti Rantaian** mengesan sebarang suntingan. Mencatat log masuk/keluar, perubahan tetapan, kata laluan, 2FA, kunci pas, ancaman, konfigurasi alarm, tambah/ubah/padam data. |
+| Alarm rondaan | Admin menetapkan **selang rondaan** dan **tempoh bunyi alarm** bagi setiap premis (menu *Alarm Rondaan*). Alarm berbunyi + bergetar pada peranti pegawai, **tiada butang henti**: hanya berhenti selepas pegawai mengimbas checkpoint. Rondaan tertunggak dilog sebagai ancaman automatik dan emel dihantar. |
+| Roster syif | Clock In dan imbasan hanya dibenarkan dalam waktu syif (toleransi 30 minit lebih awal). |
+| Masa nyata | Apps Script tidak menyokong WebSocket. Sistem menggunakan *polling* ringan setiap 5 saat (admin) / 8 saat (pegawai) dengan penanda versi, jadi dashboard, ancaman dan siren dikemas kini hampir serta-merta. |
+| Luar talian | Pegawai boleh daftar **Kunci Pas Luar Talian** (biometrik WebAuthn; jika peranti/pelayar tidak menyokong, PIN peranti). Tanpa data mudah alih, imbasan, SOS dan log disimpan dalam baris gilir pada peranti dan disegerakkan secara automatik selepas log masuk dalam talian. Alarm terus berfungsi luar talian. |
+| Google Maps | Premis dan checkpoint dijana koordinat dari alamat (Google Maps Geocoder), laluan/arah dikira pelayan (Google Maps Directions), carian tempat berhampiran (Places API, perlukan key). Tanpa API key, peta asas Google dipaparkan. |
+| Penyulitan | Semua trafik melalui HTTPS. Komunikasi pegawai-admin disulitkan **hujung-ke-hujung** (AES-256-GCM, kunci dari frasa kunci premis, diterbitkan dalam pelayar). Pelayan dan Sheet hanya menyimpan teks sulit. Gambar disimpan **privat** di Drive. |
+| Ancaman | Butang SOS, laporan insiden, rondaan tertunggak dan webhook IoT menulis ke Sheet `Threats`, membunyikan siren admin, dan menghantar emel. |
+| VMS & Log Book | Daftar pelawat (gambar, masa keluar), log book dengan kategori dan gambar bukti, eksport CSV. |
 
-## One-time installation
+## Struktur fail
 
-1. Upload the template `.xlsx` to Google Drive and open it with Google Sheets. Rename it if required.
-2. In that spreadsheet choose **Extensions → Apps Script**. Replace the default project files with `Code.gs`, `index.html`, and `appsscript.json` from this package.
-3. Save. From the Apps Script editor, run `setupVms` once and approve Google permissions. This creates or verifies every tab without deleting operational body rows, and stores the bound spreadsheet ID for web-app requests. If a tab name exists with incompatible headers, the function stops instead of overwriting it.
-4. Return to the sheet. Choose **VMS Guard App → Set or change admin password**. Use a unique password of at least 12 characters. The system stores only a salted hash in Script Properties, never in the sheet.
-5. In Apps Script choose **Deploy → New deployment → Web app**. Use the account that owns the spreadsheet and select access appropriate to your organisation. Copy the deployed `/exec` URL.
-6. Add active sites with true latitude, longitude and a realistic radius. Add checkpoints. Add employees. Create a duty roster. Then print employee and checkpoint QR labels from the HR/Admin tab of the web app.
+```
+Code.gs           Backend Apps Script (semua logik, dibungkus dalam objek M)
+Index.html        Antara muka (admin & pegawai)
+Logo.html         Logo (data URI) dimuatkan oleh Index.html
+appsscript.json   Manifest (zon masa, skop OAuth, akses web app)
+MegaSafe_Template.xlsx   Templat Google Sheet (semua tab & pengepala)
+scripts/check.js  Semakan sintaks tempatan
+package.json, .clasp.json.example, .claspignore, .gitignore, .vscode/
+```
 
-## Operating flow
+## Persediaan awal (cara 1: Google Sheet + editor Apps Script)
 
-1. Guard scans their employee QR. The signed guard context is shared across tabs on that device and expires from browser storage after 12 hours. End the guard session on shared devices.
-2. The guard selects their site and records Clock In or Clock Out. GPS accuracy and the site radius are validated by Apps Script.
-3. The guard scans a checkpoint QR and records a checkpoint check. An optional compressed photo is stored in the VMS owner Drive folder, and the private file link is written to `CHECKPOINT LOG`.
-4. The guard registers a visitor at the gate, with host, purpose, pass number, optional photo and GPS. The `VISITOR LOG` retains the same record at check-out. ID/passport input is masked before it is stored.
-5. The guard records any handover, incident, safety, maintenance or general observation in `SECURITY LOG BOOK`, again with optional image evidence.
-6. HR generates a daily report in `DAILY SITE REPORT`. It contains visitor check-ins and visitors still on site, while the Admin report view lists recent visitor movements and checkpoint photo links.
+1. Buka Google Drive, muat naik `MegaSafe_Template.xlsx`, buka dengan Google Sheets, lalu **Fail > Simpan sebagai Google Sheets**.
+   (Atau cipta Sheet kosong, sistem akan mencipta semua tab sendiri.)
+2. Dalam Sheet: **Sambungan (Extensions) > Apps Script**.
+3. Padam kandungan lalu cipta fail: `Code.gs`, `Index.html`, `Logo.html` (guna **+ > HTML** untuk dua fail HTML) dan tampal kandungannya.
+   Dalam **Project Settings** aktifkan *Show "appsscript.json" manifest file* dan tampal `appsscript.json`.
+4. Pilih fungsi `menuSetup` > **Run**, beri kebenaran (Allow). Ini mencipta semua tab dan memigrasi data lama (PIN lama ditukar kepada hash; QR checkpoint lama ditandatangani semula, **cetak semula QR**).
+5. Muat semula Sheet. Menu **Mega Safe** muncul. Pilih **2. Tetapkan kata laluan Admin** (min 10 aksara, huruf besar/kecil/nombor).
+   Tiada kata laluan lalai wujud; admin tidak boleh log masuk sebelum langkah ini.
+6. Pilih **3. Pasang pemantau rondaan** supaya rondaan tertunggak dikesan walaupun tiada admin dalam talian.
+7. **Deploy > New deployment > Web app**: *Execute as* **Me**, *Who has access* **Anyone** (pegawai tidak perlu akaun Google; keselamatan dikawal oleh log masuk + 2FA sistem ini). Salin URL `/exec`.
+   Setiap perubahan kod memerlukan **Deploy > Manage deployments > Edit > New version**.
+8. Buka URL, log masuk `admin`, daftarkan 2FA (Google/Microsoft Authenticator).
 
-## HR source and deployment
+### Cara 2: VS Code + clasp + GitHub
 
-- The app reads the `EMPLOYEES` tab in the spreadsheet to which Apps Script is bound. HR can edit a guard's name and profile in that tab or in the HR/Admin screen; keep `Employee ID` unchanged. The next QR lookup and new records use the latest name, while historical logs retain the name recorded at the time.
-- It does not automatically synchronize a separate HR spreadsheet. That requires the HR workbook's sharing permission and a confirmed mapping for employee ID, name, status and other fields.
-- Updating these project files does not update an already deployed web app by itself. Create a new deployment version after saving. The `/exec` URL supplied with this project redirects unauthenticated visitors to Google sign-in; configure web-app access for the intended guard accounts and verify the deployed URL while signed in as a guard.
+```bash
+npm install
+npx clasp login
+npx clasp create --type sheets --title "Mega Safe Security System" --rootDir .   # atau salin .clasp.json.example
+npm run check        # semak sintaks
+npm run push         # hantar kod ke Apps Script
+npm run deploy
+git init && git add . && git commit -m "Mega Safe v5.0"
+```
 
-## Important design choices
+`.clasp.json` tidak dimasukkan ke Git (ada dalam `.gitignore`). Jangan commit kata laluan, API key atau rahsia webhook; semuanya disimpan dalam *Script Properties*, bukan dalam kod.
 
-- **Name change is safe.** HR edits the employee row using the existing Employee ID. The QR revision is preserved. New displays use the current name; historic audit rows keep their original name snapshot.
-- **Lost cards are safe to revoke.** HR selects **Rotate lost QR**. Only that employee's QR revision changes; the old physical card becomes invalid. Do not edit the QR revision directly in the spreadsheet.
-- **No plain supervisor PIN in Sheets.** Admin web sessions expire after 30 minutes. The password hash and signing secret remain in Apps Script Script Properties.
-- **Every mobile write is idempotent.** Each attendance, checkpoint and log-book submission uses a request ID plus a document lock. Retrying after weak mobile connectivity cannot create a duplicate record.
-- **Photo evidence stays private by default.** Images are placed in a Drive folder owned by the deploying account. Do not make that folder public. Grant the relevant HR accounts access to the private evidence folder so they can open checkpoint/log-book links.
-- **Roster stores IDs, not names.** A rename therefore cannot detach a shift from the guard.
-- **Visitor privacy is deliberate.** The operational screen never returns full ID/passport numbers. If entered, only a masked suffix is written to `VISITOR LOG`; photographs stay in the owner-controlled evidence folder.
+## Mula guna selepas deploy
 
-## QR security boundary
+1. **Manage Premises**: tambah premis dan alamat (koordinat Google Maps dijana automatik).
+2. **Checkpoint & QR**: tambah checkpoint, tetapkan *Seq* (urutan), cetak QR (butang *Cetak semua QR*). QR mengandungi tandatangan HMAC, QR palsu ditolak.
+3. **HR - Pegawai**: tambah pegawai dengan kata laluan awal (min 8 aksara). Pegawai log masuk menggunakan **No Staf**.
+4. **Duty Roster**: tetapkan waktu syif dan hari bertugas.
+5. **Alarm Rondaan**: tetapkan selang (minit), tempoh bunyi alarm (saat) dan waktu aktif bagi setiap premis.
+6. **Tetapan**: masukkan emel amaran, (pilihan) Google Maps API key, aktifkan 2FA pegawai.
 
-The printed QR is a signed bearer credential: it is protected from editing or guessing, and it is invalid after a rotation. A photographed or copied physical QR can still be presented by someone at the same location. For stronger identity assurance, require a company MDM device, an authenticated Google account deployment, a guard PIN, or biometric/device controls in addition to the QR and GPS check. GPS also indicates device location, not human identity. No system can honestly guarantee “100% no problem” without those operational controls and a field pilot.
+### Google Maps API key (pilihan)
 
-## Pre-live checks
+Tanpa key, premis dipaparkan dengan peta asas Google. Untuk marker checkpoint/ancaman dan carian tempat: Google Cloud Console > aktifkan *Maps JavaScript API* dan *Places API (New)* > cipta key > **sekat key kepada API tersebut sahaja** > tampal di Tetapan. Geocoding dan arah laluan menggunakan perkhidmatan Maps terbina dalam Apps Script dan tidak memerlukan key.
 
-1. Confirm the spreadsheet and Apps Script timezone is `Asia/Kuala_Lumpur`.
-2. Test an Employee ID rename. Re-open the existing QR and verify it shows the new name while its revision remains unchanged.
-3. Test a lost-card rotation. Verify the old QR gives “invalid or replaced” and the reprinted QR works.
-4. Test Clock In, duplicated form retry, Clock Out, a night shift, and an off-roster attempt.
-5. At every site, test GPS inside and outside the selected radius, and test a checkpoint photo upload on the intended guard device.
-6. Check in and check out a test visitor. Confirm the full ID/passport number is not written to the sheet and that the same `Visitor ID` is updated at checkout.
-7. Generate the daily report and open one checkpoint image link using the HR account.
+### Webhook IoT (pilihan)
 
-## Notes
+Tetapan > *Jana rahsia Webhook IoT*, kemudian:
 
-- The QR image is rendered from a Google-hosted QR image URL for printing. Server-side validation uses the local Apps Script HMAC signing secret, not that renderer.
-- The template contains no real employee, visitor, credential, GPS or photo data.
-- Do not change tab headers or reuse IDs after the system is live. Use the app's status fields instead of deleting audit rows.
+```bash
+curl -X POST "URL_WEBAPP/exec" -H "Content-Type: text/plain" \
+  -d '{"secret":"RAHSIA","premise":"Nama Premis","type":"Pintu dibuka","severity":"High","detail":"Sensor pintu belakang"}'
+```
+
+### Pemulihan
+
+- Lupa kod 2FA admin / hilang telefon: menu Sheet **4. Reset 2FA Admin** (pemilik skrip sahaja).
+- Lupa kata laluan admin: menu **2. Tetapkan kata laluan Admin**.
+- Pegawai hilang telefon: Tetapan > tukar kata laluan / nyahaktif 2FA; tandakan pegawai *Inactive*.
+
+## Had yang perlu diketahui (jujur)
+
+- **Bukan WebSocket sebenar**: Apps Script tidak boleh menjadi pelayan WebSocket. Polling 5 saat digunakan; siren admin boleh lewat sehingga ~5 saat. Untuk WebSocket sebenar perlukan pelayan sendiri (cth. Firebase/Cloud Run).
+- **Penyulitan hujung-ke-hujung** hanya meliputi modul Komunikasi. Rekod lain (pelawat, log book, rondaan) dilindungi HTTPS, kawalan akses dan Google Workspace, tetapi pemilik Sheet boleh membacanya. Rahsia TOTP pegawai disimpan dalam Sheet `Guards` (jangan kongsi Sheet ini).
+- **Kunci Pas Luar Talian** ialah kunci pembuka peranti (biometrik/PIN) untuk mod luar talian sahaja; log masuk dalam talian tetap menggunakan kata laluan (+ 2FA). Dalam persekitaran Apps Script sesetengah pelayar menyekat WebAuthn; sistem akan jatuh balik kepada PIN peranti. Imbasan luar talian disahkan oleh pelayan semasa penyegerakan (tandatangan QR, waktu syif; had masa 24 jam).
+- **IP pengguna** tidak boleh dibaca oleh Apps Script; log audit merekod maklumat peranti (user-agent ringkas).
+- **Payroll** (gaji) tidak termasuk; skrin demo HR/Payroll dalam tangkapan skrin ialah data contoh. HR di sini meliputi pegawai, roster, aduan dan kehadiran.
+- Had kuota Google: pembacaan Sheet bagi puluhan pegawai serentak adalah mencukupi; untuk ratusan pegawai pertimbangkan pangkalan data berasingan.
+- Fail `Code.gs` memerlukan akaun Google pemilik yang sama untuk Sheet, Drive dan emel amaran (MailApp: ~100 emel/hari akaun percuma).
+
+## Keselamatan: senarai semak sebelum guna
+
+- [ ] Kata laluan admin kuat + 2FA aktif
+- [ ] Hanya pemilik skrip mempunyai akses edit kepada Sheet dan Apps Script
+- [ ] Trigger pemantau dipasang
+- [ ] Emel amaran ditetapkan
+- [ ] QR lama dicetak semula (selepas naik taraf)
+- [ ] Jalankan **Sahkan Integriti Rantaian** pada Log Audit secara berkala
+
+---
+Dibina untuk Mega Safe Security Services Sdn Bhd.

@@ -1,5 +1,7 @@
 {
   "files.associations": { "*.gs": "javascript" },
+  "editor.formatOnSave": false,
   "editor.tabSize": 2,
-  "files.eol": "\n"
+  "files.eol": "\n",
+  "javascript.suggest.autoImports": false
 }

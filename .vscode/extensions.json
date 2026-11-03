@@ -1,3 +1,1 @@
-{
-  "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "google-cloud-tools.cloud-code"]
-}
+{ "recommendations": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "yagisanatode.google-apps-script-snippets"] }

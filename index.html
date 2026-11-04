@@ -1,327 +1,47 @@
 <!DOCTYPE html>
 <html lang="ms"><head><base target="_top"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0a1a3a">
 <title>Mega Safe Security Services Sdn Bhd</title>
-<style>
-:root{--navy:#0a1a3a;--navy2:#13264f;--ink2:#0b1220;--gold:#b8862f;--red:#e11d2a;--bg:#f2f4f8;--ink:#14213d;--mut:#6b7794;--grn:#16a34a;--org:#d97706;--blu:#1d4ed8}
-*{box-sizing:border-box}body{margin:0;font:14px/1.45 "Segoe UI",Roboto,Arial,sans-serif;color:var(--ink);background:var(--bg)}
-#login{min-height:100vh;display:grid;place-items:center;background:var(--navy);padding:12px}
-.lb{background:#fff;padding:28px;border-radius:10px;width:min(380px,100%);text-align:center;border-top:4px solid var(--red)}
-.lb img{height:110px}.lb h2{margin:8px 0 2px;font-size:17px}.lb p{margin:0 0 14px;color:var(--mut);font-size:12px}
-input,select,textarea{width:100%;padding:9px;border:1px solid #cdd3e0;border-radius:6px;font:inherit;margin:4px 0 8px;background:#fff;color:var(--ink)}
-input[type=checkbox]{width:auto;margin:0 4px 0 0}
-button{cursor:pointer;border:0;border-radius:6px;padding:9px 14px;font:inherit;font-weight:600;background:var(--gold);color:#fff}
-button:disabled{opacity:.5;cursor:not-allowed}
-button.r{background:var(--red)}button.g{background:#e5e9f2;color:var(--ink)}button.b{background:var(--blu)}button.s{padding:4px 9px;font-size:12px}button.k{background:var(--grn)}
-#app{display:none;min-height:100vh}
-aside{position:fixed;inset:0 auto 0 0;width:230px;background:var(--navy);color:#cfd7ea;padding:14px 0;overflow:auto;transition:.2s}
-aside .br{display:flex;gap:10px;align-items:center;padding:0 16px 14px;border-bottom:1px solid #223765;color:#fff;font-weight:700;font-size:12px}
-aside .br img{height:46px}aside a{display:block;padding:9px 18px;cursor:pointer;border-left:3px solid transparent;font-size:13px}
-aside h6{margin:14px 18px 4px;font-size:10px;letter-spacing:.08em;color:#7f8db3;text-transform:uppercase}
-aside a:hover{background:var(--navy2)}aside a.on{background:var(--navy2);border-color:var(--gold);color:#fff;font-weight:600}
-aside .ft{padding:14px 18px;font-size:10px;color:#7f8db3}
-main{margin-left:230px}header{background:#fff;padding:10px 18px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #dde2ee;position:sticky;top:0;z-index:5;gap:8px;flex-wrap:wrap}
-header b{color:var(--navy)}#menu{display:none}#c{padding:18px}.hr{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-#clk{font:12px ui-monospace,Consolas,monospace;color:var(--mut)}#bell{position:relative;font-size:18px;cursor:pointer;background:none;color:var(--ink);padding:2px 6px}
-#bell i{position:absolute;top:-4px;right:-2px;background:var(--red);color:#fff;border-radius:9px;font-style:normal;font-size:10px;padding:0 5px}
-.hero{background:linear-gradient(120deg,var(--navy),#16336b);color:#fff;border-radius:10px;padding:16px 18px;margin-bottom:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
-.hero h2{margin:0;font-size:18px}.hero p{margin:2px 0 0;color:#b9c6e6;font-size:12px}
-.k{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:16px}
-.card{background:#fff;border-radius:8px;padding:14px;border:1px solid #e0e5f0}.k .card b{font-size:28px;display:block}.k .card span{color:var(--mut);font-size:12px}
-.k .card.al{border-top:3px solid var(--red)}.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;margin-bottom:16px}
-.dk{background:var(--ink2);color:#e6ecff;border-radius:10px;padding:14px;border:1px solid #1d2a4a}
-.tw{overflow:auto;background:#fff;border:1px solid #e0e5f0;border-radius:8px}table{border-collapse:collapse;width:100%;min-width:560px}
-th{background:var(--navy);color:#fff;text-align:left;padding:8px 10px;font-weight:600;white-space:nowrap;font-size:12px}td{padding:7px 10px;border-top:1px solid #edf0f6;vertical-align:middle;font-size:13px}
-tr:nth-child(even) td{background:#f8f9fc}.tb{display:flex;gap:8px;margin:0 0 10px;flex-wrap:wrap;align-items:center}.tb input,.tb select{max-width:240px;margin:0}
-.bd{padding:2px 8px;border-radius:10px;font-size:11px;font-weight:700;color:#fff;white-space:nowrap;background:#64748b}
-.OK,.Active,.Bertugas,.Approved,.Resolved,.Acknowledged,.Yes{background:var(--grn)}.Critical,.Inactive,.Rejected,.Open,.No{background:var(--red)}.Understaffed,.Pending,.High,.Belum{background:var(--org)}.Justified,.Medium,.Low{background:var(--blu)}
-.mono{font-family:ui-monospace,Consolas,monospace;font-size:11px}
-#md{position:fixed;inset:0;background:#0009;display:none;place-items:center;z-index:20;padding:12px}#md>div{background:#fff;border-radius:10px;padding:18px;width:min(520px,100%);max-height:92vh;overflow:auto}
-#toast{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 16px;border-radius:8px;display:none;z-index:50;max-width:90vw}
-label{font-size:12px;color:var(--mut);font-weight:600}.big{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}.big button{padding:16px}
-#alm{position:fixed;top:0;left:0;right:0;z-index:40;background:var(--red);color:#fff;padding:12px 16px;display:none;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:15px;font-weight:700}
-#alm button{background:#fff;color:var(--red)}#alm.q{background:#b45309}
-#off{display:none;background:#b45309;color:#fff;padding:6px 14px;font-size:12px;text-align:center}
-.cp{background:var(--ink2);color:#fff;border-radius:8px;padding:12px;border:1px solid #1d2a4a;display:flex;flex-direction:column;gap:8px}
-.cp .n{display:inline-block;width:24px;height:24px;border-radius:50%;background:#1d3a8a;text-align:center;line-height:24px;margin-right:8px;font-size:12px}.cp.ok .n{background:var(--grn)}
-.cps{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
-.bar{display:flex;align-items:flex-end;gap:6px;height:90px}.bar div{flex:1;background:#3b82f6;border-radius:3px 3px 0 0;min-height:2px;position:relative}.bar span{position:absolute;top:-16px;left:0;right:0;text-align:center;font-size:10px;color:#9fb3e8}
-.lab{display:flex;gap:6px;font-size:10px;color:#9fb3e8}.lab span{flex:1;text-align:center}
-.wk label{display:inline-flex;align-items:center;margin-right:8px;color:var(--ink);font-weight:500}
-#map{height:520px;border-radius:8px;overflow:hidden;background:#dfe5f1}#map iframe{width:100%;height:100%;border:0}
-.msg{padding:8px 10px;border-radius:8px;background:#eef2fb;margin:6px 0;max-width:90%}.msg.me{background:#e8f7ee;margin-left:auto}.msg small{color:var(--mut)}
-@media(max-width:800px){aside{transform:translateX(-100%);z-index:15}aside.o{transform:none}main{margin-left:0}#menu{display:inline-block}}
-@media print{aside,header,#toast,.tb{display:none}main{margin:0}}
-</style></head><body>
+<link rel="icon" href="img/logo.png">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="img/icon-192.png">
+<link rel="stylesheet" href="css/style.css">
+</head><body>
 <div id="alm"><span id="almT"></span><span><button onclick="goPage('term')">Imbas checkpoint sekarang</button></span></div>
-<div id="login"><div class="lb"><img src="<?!= include('Logo') ?>" alt="Mega Safe"><h2>Mega Safe Security Services Sdn Bhd</h2><p>Guard Tour, Visitor Register &amp; Security Log Book</p>
-<div id="s1"><input id="lid" placeholder="No Staf / admin" autocomplete="username" autocapitalize="off"><input id="lpw" type="password" placeholder="Kata laluan" autocomplete="current-password"></div>
-<div id="s2" style="display:none"><label>Kod 2FA (6 digit, aplikasi Authenticator)</label><input id="lotp" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code"></div>
-<button id="lbtn" type="button" style="width:100%">Log Masuk</button>
-<button id="loff" type="button" class="g" style="width:100%;margin-top:8px;display:none">Masuk Luar Talian (Kunci Pas)</button>
-<div id="lmsg" style="color:#e11d2a;font-size:13px;margin-top:10px;min-height:18px"></div></div></div>
-<div id="app"><aside id="sd"><div class="br"><img src="<?!= include('Logo') ?>"><span>MEGA SAFE<br>SECURITY SERVICES</span></div><nav id="nav"></nav><div class="ft">MegaSafe v5.0<br><span id="sb">Disambung ke Google Sheets</span></div></aside>
-<main><div id="off">Mod luar talian — imbasan, SOS &amp; log disimpan pada peranti dan dihantar apabila anda log masuk dalam talian.</div>
-<header><div class="hr"><button id="menu" class="g s" onclick="sd.classList.toggle('o')">☰</button> <b id="ttl"></b></div>
-<div class="hr"><span id="clk"></span><button class="g s" id="sir" onclick="beep(3)">Uji Siren</button><button id="bell" onclick="goPage('Threats')" title="Ancaman terbuka">🔔<i id="bn" style="display:none">0</i></button><span id="usr"></span> <button class="g s" onclick="doLogout()">Keluar</button></div></header><div id="c"></div></main></div>
+
+<div id="login"><div class="lb">
+  <img data-logo src="img/logo.png" alt="Mega Safe">
+  <h2>Mega Safe Security Services Sdn Bhd</h2>
+  <p>Guard Tour, Visitor Register &amp; Security Log Book</p>
+  <div id="s1"><input id="lid" placeholder="No Staf / admin" autocomplete="username" autocapitalize="off"><input id="lpw" type="password" placeholder="Kata laluan" autocomplete="current-password"></div>
+  <div id="s2" style="display:none"><label>Kod 2FA (6 digit, aplikasi Authenticator)</label><input id="lotp" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code"></div>
+  <button id="lbtn" type="button" class="gold" style="width:100%">Log Masuk</button>
+  <button id="loff" type="button" class="ghost" style="width:100%;margin-top:8px;display:none">Masuk Luar Talian (Kunci Pas)</button>
+  <div id="lmsg"></div>
+</div></div>
+
+<div id="app">
+  <div id="off">Mod luar talian: imbasan, SOS dan log disimpan pada peranti dan dihantar apabila anda log masuk dalam talian.</div>
+  <header class="top">
+    <div class="tl"><button id="menu" class="ghost s" onclick="sd.classList.toggle('o')">☰</button><img data-logo src="img/logo.png" alt=""><b>MEGA SAFE</b></div>
+    <div class="tr">
+      <select id="psel" title="Premis" onchange="setPSel(this.value)"></select>
+      <button class="ghost s" id="sir" onclick="beep(3)">🔊 Uji Siren</button>
+      <span id="clk"></span>
+      <button id="bell" onclick="goPage('reports')" title="Ancaman terbuka">🔔<i id="bn" style="display:none">0</i></button>
+      <span class="av" id="av">A</span>
+      <span class="who"><b id="usr"></b><small id="rol"></small></span>
+      <button class="ghost s" onclick="doLogout()">Keluar</button>
+    </div>
+  </header>
+  <aside id="sd"><nav id="nav"></nav><div class="ft">Mega Safe v5.0<br><span class="g">Disambung ke Google Sheets</span></div></aside>
+  <main id="c"></main>
+</div>
 <div id="md"><div id="mb"></div></div><div id="toast"></div>
+
+<script src="js/config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
-<script>
-let T=null,U=null,PAGE='',PREM=[],GL=[],DATA=null,QR=null,ST=null,OFF=0,OFFMODE=false,LASTVER='',SEEN={},NETFAIL=false,MAPK=null,POLLN=0;
-const $=s=>document.querySelector(s),esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const DEV=((navigator.userAgent.match(/\(([^)]+)\)/)||[0,''])[1]).slice(0,60);
-function ls(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k)||'null');if(v===null)localStorage.removeItem(k);else localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
-function toast(m){const l=$('#login');if(l&&l.style.display!='none'){$('#lmsg').textContent=m}const t=$('#toast');t.textContent=m;t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',4500)}
-window.onerror=function(m,s,l){const t=$('#toast');t.textContent='Ralat: '+m+' (baris '+l+')';t.style.display='block'};
-function rpc(fn,a,quiet){return new Promise(r=>{NETFAIL=false;a=Object.assign({},a||{},{_dev:DEV});
- google.script.run.withSuccessHandler(x=>{let o;try{o=JSON.parse(x)}catch(e){if(!quiet)toast('Respons pelayan tidak sah');return r(null)}
-  if(o.error){if(/Sesi tamat/.test(o.error)&&T&&fn!='poll'){forceOut(o.error)}else if(!quiet)toast(o.error);r(null)}else r(o.data)})
- .withFailureHandler(e=>{NETFAIL=true;if(!quiet)toast(e&&e.message||'Tiada sambungan');r(null)}).rpc(fn,T||'',JSON.stringify(a))})}
-function forceOut(m){toast(m||'Sesi tamat');setTimeout(()=>location.reload(),1500)}
-
-/* ---------- bunyi alarm ---------- */
-let AC=null;
-function audioCtx(){try{const A=window.AudioContext||window.webkitAudioContext;if(!AC)AC=new A();if(AC.state=='suspended')AC.resume()}catch(e){}return AC}
-document.addEventListener('click',audioCtx);document.addEventListener('touchstart',audioCtx,{passive:true});
-function beep(n){const a=audioCtx();if(a){for(let i=0;i<(n||3);i++){[880,660].forEach((f,j)=>{const o=a.createOscillator(),g=a.createGain();o.type='square';o.frequency.value=f;g.gain.value=.25;o.connect(g);g.connect(a.destination);const t=a.currentTime+i*.7+j*.3;o.start(t);o.stop(t+.25)})}}try{navigator.vibrate&&navigator.vibrate([300,150,300,150,300])}catch(e){}}
-let WL=null;async function wake(){try{if(navigator.wakeLock)WL=await navigator.wakeLock.request('screen')}catch(e){}}
-document.addEventListener('visibilitychange',()=>{if(!document.hidden&&U&&U.role=='guard')wake()});
-
-/* ---------- navigasi ---------- */
-const PG={
- dash:{t:'Dashboard (Ancaman)',r:'a',g:'MENU UTAMA'},map:{t:'Central Monitoring (Peta)',r:'a'},
- Attendance:{t:'Attendance Record',r:'ag'},Patrol:{t:'Laporan Rondaan',r:'ag'},
- term:{t:'Guard Mobile Terminal',r:'ag'},Visitors:{t:'Visitor Register (VMS)',r:'ag',v:1},LogBook:{t:'Security Log Book',r:'ag',l:1},comms:{t:'Komunikasi E2EE',r:'ag'},
- Threats:{t:'Ancaman & Insiden',r:'a'},
- Guards:{t:'HR - Pegawai',r:'a',g:'PENGURUSAN & HR',e:1,f:['Name','StaffNo','Phone','Email','Premise:@P','Shift:Shift1|Shift2|Shift3','Status:Active|Inactive','NewPIN:@K']},
- Complaints:{t:'Aduan & Salah Laku',r:'a',e:1,f:['Date:@D','Premise:@P','Description:@T','Status:Pending|Justified|Approved|Rejected|Resolved|Settled','Action']},
- Premises:{t:'Manage Premises',r:'a',e:1,f:['Name','Address:@T','Lat','Lng','Status:Active|Inactive']},
- Checkpoints:{t:'Checkpoint & QR',r:'a',e:1,f:['Premise:@P','Name','Seq:@N','Lat','Lng','Status:Active|Inactive']},
- Roster:{t:'Duty Roster & Report',r:'a',e:1,f:['GuardID:@G','Premise:@P','ShiftName','Start:@H','End:@H','Days:@W']},
- PatrolConfig:{t:'Alarm Rondaan',r:'a',e:1,f:['Premise:@P','IntervalMin:@N','AlarmSec:@N','Start:@H','End:@H','Active:Yes|No']},
- settings:{t:'Tetapan & Kata Laluan',r:'a'},AuditLog:{t:'Log Audit Keselamatan',r:'a'}};
-const HELP={PatrolConfig:'Hanya admin boleh menetapkan selang rondaan dan tempoh bunyi alarm. Alarm berbunyi pada peranti pegawai apabila tiba masa rondaan dan hanya berhenti selepas pegawai mengimbas checkpoint.',
- Roster:'Pegawai hanya boleh Clock In / mengimbas dalam waktu syif (toleransi 30 minit lebih awal). Pegawai tanpa roster tidak dihadkan.'};
-function buildNav(){let h='',cur='';Object.keys(PG).forEach(k=>{const g=PG[k];if(!g.r.includes(U.role=='admin'?'a':'g'))return;if(OFFMODE&&k!='term')return;if(g.g&&g.g!=cur){cur=g.g;h+=`<h6>${g.g}</h6>`}h+=`<a data-k="${k}" onclick="goPage('${k}')">${PG[k].t}</a>`});$('#nav').innerHTML=h}
-async function goPage(k){PAGE=k;sd.classList.remove('o');document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('on',a.dataset.k==k));$('#ttl').textContent=PG[k].t;$('#c').innerHTML='Memuatkan...';
- const f={dash:showDash,map:showMap,term:showTerm,settings:showSettings,comms:showComms}[k];if(f)return f();showTable(k)}
-
-/* ---------- log masuk ---------- */
-let NEED2=false;
-async function doLogin(){const m=$('#lmsg');m.textContent='';const id=$('#lid').value.trim(),pin=$('#lpw').value;if(!id||!pin){m.textContent='Masukkan ID dan kata laluan.';return}
- $('#lbtn').disabled=true;const d=await rpc('login',{id,pin,otp:$('#lotp').value});$('#lbtn').disabled=false;
- if(!d){return}
- if(d.need2fa){NEED2=true;$('#s2').style.display='';$('#lotp').focus();m.style.color='#6b7794';m.textContent='Masukkan kod 2FA.';return}
- T=d.token;U=d.user;$('#lpw').value='';$('#lotp').value='';await startApp()}
-async function startApp(){$('#login').style.display='none';$('#app').style.display='block';$('#usr').textContent=U.name;$('#sir').style.display=U.role=='admin'?'':'none';$('#bell').style.display=U.role=='admin'?'':'none';
- if(U.mustEnroll){buildNav();return enrol2FA(true)}
- const p=await rpc('premises');PREM=p||[];if(U.role=='admin'){const g=await rpc('guardsLite');GL=g||[]}
- buildNav();if(U.role=='guard'){wake();await syncQ();const s=await rpc('patrolState',{},1);if(s)setST(s);cacheProfile()}
- goPage(U.role=='admin'?'dash':'term');pollLoop()}
-function doLogout(){if(T)rpc('logout',{},1).then(()=>location.reload());else location.reload()}
-document.addEventListener('DOMContentLoaded',()=>{});
-$('#lbtn').addEventListener('click',doLogin);$('#lpw').addEventListener('keydown',e=>{if(e.key=='Enter')doLogin()});$('#lotp').addEventListener('keydown',e=>{if(e.key=='Enter')doLogin()});
-$('#loff').addEventListener('click',offlineLogin);if((ls('pf')||[]).length)$('#loff').style.display='';
-
-/* ---------- 2FA admin ---------- */
-async function enrol2FA(force){const d=await rpc('totpBegin');if(!d)return;
- $('#mb').innerHTML=`<h3>Aktifkan Pengesahan Dua Faktor (2FA)</h3><p>Imbas kod QR dengan Google Authenticator / Microsoft Authenticator, kemudian masukkan kod 6 digit.</p><div style="text-align:center"><img src="${qrimg(d.uri,5)}"><p class="mono">${esc(d.secret)}</p></div><label>Kod 6 digit</label><input id="tc" inputmode="numeric" maxlength="6"><button onclick="confirm2FA()">Sahkan & Aktifkan</button>`;md.style.display='grid'}
-async function confirm2FA(){if(await rpc('totpConfirm',{code:$('#tc').value})){U.mustEnroll=false;closeM();toast('2FA diaktifkan');startApp()}}
-
-/* ---------- utiliti paparan ---------- */
-const qrimg=(t,c)=>{const q=qrcode(0,'M');q.addData(t);q.make();return q.createDataURL(c||6,4)};
-function closeM(){md.style.display='none';if(QR){QR.stop().catch(()=>{});QR=null}}
-function cell(k,v,r){v=v==null?'':v;if(k=='PhotoURL')return v?`<button class="s g" onclick="showPhoto('${esc(v)}')">📷 Lihat</button>`:'';if(/^(Status|Severity|TotpOn|PasskeyOn|Active)$/.test(k)){if(k=='TotpOn'||k=='PasskeyOn')return v=='1'?'<span class="bd Yes">Aktif</span>':'<span class="bd" style="background:#94a3b8">-</span>';return `<span class="bd ${esc(v)}">${esc(v)}</span>`}
- if(k=='Hash'||k=='PrevHash')return `<span class="mono" title="${esc(v)}">${esc(String(v).slice(0,12))}…</span>`;if(k=='Action')return /Complaint/.test(PAGE)?esc(v):`<span class="bd ${/DELETE|FAIL|LOCK|DISABLED/.test(v)?'Critical':/LOGIN|LOGOUT|CREATE/.test(v)?'OK':/PASSWORD|THREAT/.test(v)?'High':'Justified'}">${esc(v)}</span>`;
- if(k=='Days')return String(v).split(',').map(d=>['','Isn','Sel','Rab','Kha','Jum','Sab','Ahd'][+d]||'').join(' ');return esc(v)}
-async function showPhoto(id){$('#mb').innerHTML='Memuatkan gambar...';md.style.display='grid';const d=await rpc('photo',{id});if(!d){closeM();return}$('#mb').innerHTML=`<img src="${d}" style="width:100%;border-radius:6px"><button class="g" style="width:100%;margin-top:8px" onclick="closeM()">Tutup</button>`}
-function dl(name,txt,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click()}
-function csv(){const d=DATA;const q=x=>'"'+String(x==null?'':x).replace(/"/g,'""')+'"';dl(PAGE+'_'+new Date().toISOString().slice(0,10)+'.csv','﻿'+[d.cols.map(q).join(',')].concat(d.rows.map(r=>d.cols.map(c=>q(r[c])).join(','))).join('\n'),'text/csv')}
-function json(){dl(PAGE+'.json',JSON.stringify(DATA.rows,null,2),'application/json')}
-
-/* ---------- Dashboard ---------- */
-async function showDash(){const d=await rpc('dash');if(!d)return;const c=(n,l,a)=>`<div class="card ${a&&n?'al':''}"><b>${n}</b><span>${l}</span></div>`;
- const mx=Math.max(1,...d.threatDays.map(x=>x.n));const ty=Object.keys(d.threatTypes).sort((a,b)=>d.threatTypes[b]-d.threatTypes[a]);
- $('#c').innerHTML=(d.totpOn?'':'<div class="card" style="border-left:4px solid var(--red);margin-bottom:12px">⚠ 2FA admin belum aktif. Pergi ke Tetapan.</div>')+
- `<div class="hero"><div><h2>Pusat Kawalan Keselamatan & Analisis Ancaman</h2><p>Dikemas kini masa nyata (setiap 5 saat). Ancaman baharu akan membunyikan siren.</p></div><div><button class="g" onclick="beep(3)">Uji Siren</button> <button class="g" onclick="goPage('AuditLog')">Log Audit</button></div></div>
- <div class="k">${c(d.threatsOpen,'Ancaman terbuka',1)}${c(d.premises,'Premis aktif')}${c(d.guards,'Pegawai aktif ('+d.inactive+' tidak aktif)')}${c(d.onDuty,'Sedang bertugas')}${c(d.patrolToday,'Imbasan hari ini')}${c(d.visitorsIn,'Pelawat di dalam')}${c(d.complaints,'Aduan belum selesai',1)}</div>
- <div class="two"><div class="dk"><b>Ancaman 7 hari terakhir</b><div class="bar" style="margin-top:22px">${d.threatDays.map(x=>`<div style="height:${Math.round(x.n/mx*100)}%"><span>${x.n}</span></div>`).join('')}</div><div class="lab">${d.threatDays.map(x=>`<span>${x.d}</span>`).join('')}</div></div>
- <div class="dk"><b>Jenis ancaman (30 hari)</b><div style="margin-top:10px">${ty.map(t=>`<div style="display:flex;justify-content:space-between;border-bottom:1px solid #1d2a4a;padding:4px 0"><span>${esc(t)}</span><b>${d.threatTypes[t]}</b></div>`).join('')||'<span style="color:#9fb3e8">Tiada ancaman direkodkan.</span>'}</div></div></div>
- <h3>Status Rondaan</h3><div class="tw"><table><tr><th>Premis</th><th>Rondaan Terakhir</th><th>Rondaan Seterusnya</th><th>Pusingan</th><th>Status</th></tr>${d.tour.map(t=>`<tr><td>${esc(t.premise)}</td><td>${esc(t.last)}</td><td>${esc(t.next)}</td><td>${t.done}/${t.total}</td><td><span class="bd ${t.status}">${t.status}</span></td></tr>`).join('')||'<tr><td colspan=5>Tiada premis. Tambah di menu Manage Premises.</td></tr>'}</table></div>
- <h3>Status Kehadiran Pegawai</h3><div class="tw"><table><tr><th>Pegawai</th><th>No Staf</th><th>Premis</th><th>Syif</th><th>Status</th><th>Sejak</th></tr>${d.guardList.map(g=>`<tr><td>${esc(g.name)}</td><td>${esc(g.staff)}</td><td>${esc(g.premise)}</td><td>${esc(g.shift)}</td><td><span class="bd ${esc(g.status)}">${esc(g.status)}</span></td><td>${esc(g.since)}</td></tr>`).join('')||'<tr><td colspan=6>Tiada pegawai.</td></tr>'}</table></div>
- <h3>Ancaman Terkini</h3>${thtml(d.recentThreats)}
- <h3>Aduan Terkini</h3><div class="tw"><table><tr><th>Ref</th><th>Tarikh</th><th>Butiran</th><th>Status</th></tr>${d.recentComplaints.map(x=>`<tr><td class="mono">${esc(x.RefNo)}</td><td>${esc(x.Date)}</td><td>${esc(x.Description)}</td><td><span class="bd ${esc(x.Status)}">${esc(x.Status)}</span></td></tr>`).join('')||'<tr><td colspan=4>Tiada aduan.</td></tr>'}</table></div>`}
-function thtml(a){return `<div class="tw"><table><tr><th>Masa</th><th>Premis</th><th>Jenis</th><th>Tahap</th><th>Pegawai</th><th>Butiran</th><th>Status</th><th></th></tr>${a.map(t=>`<tr><td>${esc(t.Timestamp)}</td><td>${esc(t.Premise)}</td><td>${esc(t.Type)}</td><td><span class="bd ${esc(t.Severity)}">${esc(t.Severity)}</span></td><td>${esc(t.Guard)}</td><td>${esc(t.Detail)}</td><td><span class="bd ${esc(t.Status)}">${esc(t.Status)}</span></td><td style="white-space:nowrap">${t.Status=='Open'?`<button class="s k" onclick="ack('${t.ThreatID}','Acknowledged')">Terima</button> <button class="s g" onclick="ack('${t.ThreatID}','Resolved')">Selesai</button> <button class="s g" onclick="ack('${t.ThreatID}','False Alarm')">Salah</button>`:t.Status=='Acknowledged'?`<button class="s g" onclick="ack('${t.ThreatID}','Resolved')">Selesai</button>`:''}</td></tr>`).join('')||'<tr><td colspan=8>Tiada ancaman.</td></tr>'}</table></div>`}
-async function ack(id,s){if(await rpc('threatAck',{id,status:s})){toast('Dikemas kini');goPage(PAGE)}}
-
-/* ---------- jadual generik ---------- */
-async function showTable(k){const d=await rpc('list',{sheet:k});if(!d)return;const g=PG[k];DATA=d;
- if(k=='Threats'){$('#c').innerHTML=`<div class="tb"><button class="g" onclick="goPage('Threats')">Muat semula</button></div>`+thtml(d.rows);return}
- let af='';if(k=='AuditLog'){const acts=[...new Set(d.rows.map(r=>r.Action))].sort();af=`<select id="af" onchange="filterRows()"><option value="">Semua Tindakan Audit</option>${acts.map(a=>`<option>${esc(a)}</option>`).join('')}</select><button class="g" onclick="json()">Eksport JSON</button><button class="b" onclick="verifyAudit()">Sahkan Integriti Rantaian</button>`}
- $('#c').innerHTML=(HELP[k]?`<div class="card" style="margin-bottom:10px;font-size:12px;color:var(--mut)">${HELP[k]}</div>`:'')+`<div class="tb"><input id="q" placeholder="Cari..." oninput="filterRows()">${af}${g.e||g.v||g.l?`<button onclick="openForm('${k}')">+ Tambah</button>`:''}${k=='Checkpoints'?'<button class="g" onclick="allQR()">Cetak semua QR</button>':''}${(k=='Patrol')?'<button onclick="scanUI()">Imbas Checkpoint</button>':''}<button class="g" onclick="csv()">Eksport CSV</button><button class="g" onclick="goPage('${k}')">Muat semula</button></div>
- <div class="tw"><table id="tb"><tr>${d.cols.map(c=>`<th>${c}</th>`).join('')}<th></th></tr>${d.rows.map((r,i)=>`<tr>${d.cols.map(c=>`<td>${cell(c,r[c],r)}</td>`).join('')}<td style="white-space:nowrap">${acts(k,r,i)}</td></tr>`).join('')||`<tr><td colspan=20>Tiada rekod.</td></tr>`}</table></div>`}
-function filterRows(){const q=($('#q')||{value:''}).value.toLowerCase(),a=$('#af')?$('#af').value:'';document.querySelectorAll('#tb tr').forEach((t,i)=>{if(i)t.style.display=t.textContent.toLowerCase().includes(q)&&(!a||t.textContent.includes(a))?'':'none'})}
-function acts(k,r,i){let h='';if(PG[k].e)h+=`<button class="s g" onclick="openForm('${k}',${i})">Edit</button> <button class="s r" onclick="doDel('${k}',${i})">Padam</button> `;
- if(k=='Checkpoints')h+=`<button class="s" onclick="showQR(${i})">QR</button>`;
- if(k=='Visitors'&&!r.TimeOut)h+=`<button class="s" onclick="vout('${esc(r.VisitID)}')">Keluar</button>`;return h}
-async function verifyAudit(){const r=await rpc('auditVerify');if(r)toast(r.ok?'Rantaian SHA-256 utuh ('+r.count+' rekod).':'AMARAN: rantaian rosak pada rekod #'+r.brokenAt)}
-function opts(s,v){let l;if(s=='@P')return PREM.map(o=>`<option ${o==v?'selected':''}>${esc(o)}</option>`).join('');if(s=='@G')return GL.map(g=>`<option value="${esc(g.id)}" ${g.id==v?'selected':''}>${esc(g.name)} (${esc(g.staff)})</option>`).join('');return s.split('|').map(o=>`<option ${o==v?'selected':''}>${esc(o)}</option>`).join('')}
-function openForm(k,i){const g=PG[k],row=i!=null?DATA.rows[i]:{};let f=g.f;
- if(g.v)f=['Name','IC','Phone','Vehicle','Purpose','Host',...(U.role=='admin'?['Premise:@P']:[]),'Photo:@F'];
- if(g.l)f=['Category:Rondaan|Insiden|Kejadian|Serahan Tugas|Kenderaan|Lain-lain',...(U.role=='admin'?['Premise:@P']:[]),'Description:@T','Photo:@F'];
- $('#mb').innerHTML=`<h3>${g.t}</h3>`+f.map(x=>{const[n,o]=x.split(':');const id='f_'+n;let v=row[n]==null?'':row[n],el;
-  if(!o)el=`<input id="${id}" value="${esc(v)}">`;else if(o=='@T')el=`<textarea id="${id}" rows=3>${esc(v)}</textarea>`;
-  else if(o=='@D')el=`<input id="${id}" type="date" value="${esc(v||new Date().toISOString().slice(0,10))}">`;
-  else if(o=='@F')el=`<input id="${id}" type="file" accept="image/*" capture="environment">`;
-  else if(o=='@N')el=`<input id="${id}" type="number" value="${esc(v)}">`;else if(o=='@H')el=`<input id="${id}" type="time" value="${esc(v)}">`;
-  else if(o=='@K')el=`<input id="${id}" type="password" autocomplete="new-password" placeholder="${i!=null?'Kosongkan jika tidak mahu tukar':'Minimum 8 aksara'}">`;
-  else if(o=='@W'){const s=String(v||'1,2,3,4,5').split(',');el=`<div class="wk" id="${id}">${['Isnin','Selasa','Rabu','Khamis','Jumaat','Sabtu','Ahad'].map((d,j)=>`<label><input type="checkbox" value="${j+1}" ${s.includes(String(j+1))?'checked':''}>${d}</label>`).join('')}</div>`}
-  else el=`<select id="${id}">${opts(o,v)}</select>`;return `<label>${n}</label>${el}`}).join('')+`<div style="margin-top:8px"><button onclick="doSubmit('${k}',${i==null?-1:i})">Simpan</button> <button class="g" onclick="closeM()">Batal</button></div>`;md.style.display='grid'}
-function readImg(inp,max){return new Promise(r=>{const f=inp&&inp.files&&inp.files[0];if(!f)return r('');const im=new Image(),u=URL.createObjectURL(f);im.onload=()=>{const s=Math.min(1,(max||1024)/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=im.width*s;c.height=im.height*s;c.getContext('2d').drawImage(im,0,0,c.width,c.height);r(c.toDataURL('image/jpeg',.7))};im.onerror=()=>r('');im.src=u})}
-async function doSubmit(k,i){const g=PG[k],row=i>=0?{...DATA.rows[i]}:{};
- document.querySelectorAll('#mb [id^=f_]').forEach(e=>{const n=e.id.slice(2);if(e.type=='file')return;if(e.classList.contains('wk'))row[n]=[...e.querySelectorAll('input:checked')].map(x=>x.value).join(',');else row[n]=e.value});
- if(g.v||g.l){const photo=await readImg($('#f_Photo'),g.l?800:800);const fn=g.v?'visitorAdd':'logAdd';
-  const ok=await guardAct(fn,{row,photo},g.t);if(ok){closeM();if(['Visitors','LogBook'].includes(PAGE))goPage(PAGE)}return}
- const ok=await rpc('save',{sheet:k,row});
- if(ok){closeM();toast('Disimpan');if(k=='Guards'||k=='Premises'){PREM=(await rpc('premises'))||PREM;GL=(await rpc('guardsLite'))||GL}goPage(k)}}
-async function doDel(k,i){const r=DATA.rows[i];if(confirm('Padam rekod ini?')&&await rpc('del',{sheet:k,key:r[DATA.cols[0]]})){toast('Dipadam');goPage(k)}}
-async function vout(key){if(await rpc('visitorOut',{key})){toast('Pelawat keluar');goPage('Visitors')}}
-function showQR(i){const r=DATA.rows[i];$('#mb').innerHTML=`<div style="text-align:center"><h3>${esc(r.Name)}</h3><p>${esc(r.Premise)}</p><img src="${qrimg(r.QRCode,8)}" width=260><p class="mono">${esc(r.QRCode)}</p><button onclick="window.print()">Cetak</button> <button class="g" onclick="closeM()">Tutup</button></div>`;md.style.display='grid'}
-function allQR(){const w=window.open('');if(!w)return toast('Benarkan pop-up untuk mencetak.');w.document.write('<body style="font-family:Arial;display:flex;flex-wrap:wrap;gap:14px">'+DATA.rows.filter(r=>r.Status!='Inactive').map(r=>`<div style="border:2px solid #b8862f;padding:10px;text-align:center;width:230px"><b>MEGA SAFE SECURITY</b><br><img src="${qrimg(r.QRCode,6)}" width=200><br><b>${esc(r.Name)}</b><br>${esc(r.Premise)}</div>`).join('')+'<script>setTimeout(()=>print(),800)<\/script>');w.document.close()}
-
-/* ---------- peta (Google Maps agent) ---------- */
-let GM=null,MD=null,SELP=null;
-async function showMap(){const d=await rpc('mapData');if(!d)return;MD=d;if(!SELP||!d.premises.find(p=>p.Name==SELP))SELP=d.premises[0]&&d.premises[0].Name;
- const cps=d.cps.filter(c=>c.Premise==SELP).sort((a,b)=>(+a.Seq||99)-(+b.Seq||99));
- $('#c').innerHTML=`<div class="hero"><div><h2>Ejen Rondaan & Navigasi Google Maps</h2><p>Premis, checkpoint, laluan dan ancaman aktif.</p></div><div><input id="ps" placeholder="Cari tempat berhampiran..." style="width:200px;display:inline-block;margin:0"> <button class="g" onclick="placesQ()">Cari</button></div></div>
- <div class="two" style="grid-template-columns:minmax(280px,360px) 1fr"><div><div class="dk" style="margin-bottom:10px"><b>PREMIS KAWALAN</b>${d.premises.map(p=>`<div onclick="SELP='${esc(p.Name)}';showMap()" style="cursor:pointer;padding:8px;margin-top:6px;border-radius:6px;border:1px solid ${p.Name==SELP?'#3b82f6':'#1d2a4a'}">${esc(p.Name)}<br><small style="color:#9fb3e8">${esc(p.Address)}</small>${d.threats.some(t=>t.Premise==p.Name)?' <span class="bd Critical">Amaran</span>':''}</div>`).join('')||'Tiada premis.'}</div>
- <div class="dk"><b>TITIK SEMAKAN QR (${cps.length})</b>${cps.map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #1d2a4a"><span>${esc(c.Seq||'')} ${esc(c.Name)}</span><button class="s b" onclick="route('${c.CPID}')">Laluan</button></div>`).join('')}<div id="rt" style="margin-top:8px;font-size:12px"></div></div></div>
- <div><div id="map"></div></div></div><h3>Ancaman Aktif</h3>${thtml(d.threats)}`;
- drawMap()}
-async function drawMap(){const p=MD.premises.find(x=>x.Name==SELP);if(MAPK===null){MAPK=(await rpc('mapKey',{},1))||''}
- const el=$('#map');if(!p||!p.Lat||!p.Lng){el.innerHTML='<div style="padding:20px">Tetapkan Lat/Lng premis (atau isi alamat — koordinat dijana automatik oleh Google Maps) di menu Manage Premises.</div>';return}
- if(!MAPK){el.innerHTML=`<iframe src="https://maps.google.com/maps?q=${encodeURIComponent(p.Lat+','+p.Lng)}&z=18&output=embed" loading="lazy"></iframe>`;return}
- if(!window.google||!google.maps){window.__gm=()=>drawMap();window.gm_authFailure=()=>{el.innerHTML='<div style="padding:20px">Google Maps API key ditolak. Semak Billing, Maps JavaScript API dan sekatan key.</div>'};const s=document.createElement('script');s.src='https://maps.googleapis.com/maps/api/js?key='+encodeURIComponent(MAPK)+'&callback=__gm';s.async=true;document.head.appendChild(s);return}
- GM=new google.maps.Map(el,{center:{lat:+p.Lat,lng:+p.Lng},zoom:18,mapTypeControl:true});new google.maps.Marker({map:GM,position:{lat:+p.Lat,lng:+p.Lng},title:p.Name});
- MD.cps.filter(c=>c.Premise==SELP&&c.Lat&&c.Lng).forEach(c=>new google.maps.Marker({map:GM,position:{lat:+c.Lat,lng:+c.Lng},title:c.Name,label:String(c.Seq||'•'),icon:{path:google.maps.SymbolPath.CIRCLE,scale:11,fillColor:'#1d3a8a',fillOpacity:1,strokeColor:'#fff',strokeWeight:2},}));
- MD.last.filter(l=>l.Premise==SELP).forEach(l=>new google.maps.Marker({map:GM,position:{lat:+l.Lat,lng:+l.Lng},title:l.Guard+' @ '+l.Checkpoint+' '+l.Timestamp,icon:'https://maps.google.com/mapfiles/ms/icons/green-dot.png'}));
- MD.threats.filter(t=>t.Lat&&t.Lng).forEach(t=>new google.maps.Marker({map:GM,position:{lat:+t.Lat,lng:+t.Lng},title:t.Type,icon:'https://maps.google.com/mapfiles/ms/icons/red-dot.png'}))}
-async function route(cpid){const p=MD.premises.find(x=>x.Name==SELP),c=MD.cps.find(x=>x.CPID==cpid);const to=c.Lat&&c.Lng?c:p;
- const pos=await new Promise(r=>navigator.geolocation?navigator.geolocation.getCurrentPosition(q=>r({lat:q.coords.latitude,lng:q.coords.longitude}),()=>r(null),{timeout:5000}):r(null));
- const from=pos||{lat:p.Lat,lng:p.Lng};$('#rt').textContent='Mengira laluan...';const r=await rpc('maps',{action:'route',from,to:{lat:to.Lat,lng:to.Lng},mode:'walking'});
- $('#rt').innerHTML=r?`<b>${esc(r.distance)} · ${esc(r.duration)}</b> <a href="${esc(r.link)}" target="_blank" style="color:#9fb3e8">Buka di Google Maps</a><ol style="padding-left:18px">${r.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol>`:'Laluan gagal.'}
-async function placesQ(){const q=$('#ps').value.trim();if(!q)return;const p=MD.premises.find(x=>x.Name==SELP)||{};const r=await rpc('maps',{action:'places',query:q,lat:p.Lat,lng:p.Lng});if(!r)return;
- $('#mb').innerHTML=`<h3>Tempat berhampiran</h3>${r.map(x=>`<div style="padding:6px 0;border-bottom:1px solid #eee"><b>${esc(x.name)}</b><br><small>${esc(x.address)}</small> <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=${x.lat},${x.lng}">Peta</a></div>`).join('')||'Tiada hasil.'}<button class="g" onclick="closeM()" style="margin-top:8px">Tutup</button>`;md.style.display='grid'}
-
-/* ---------- terminal pegawai ---------- */
-function setST(s){ST=s;OFF=s.now-Date.now();if(U){ls('st_'+U.id,s)}}
-function nowS(){return Date.now()+OFF}
-function showTerm(){const s=ST,cps=s?s.cps:[];const dn=s?s.done:0,tot=s?s.total:0;
- $('#c').innerHTML=`<div class="hero"><div><h2>Terminal Rondaan Pegawai</h2><p>${esc(U.name)} · ${esc(U.premise||'Semua premis')} ${U.shift?'· '+esc(U.shift):''}</p></div>${U.role=='guard'?'<button class="r" onclick="doSOS()">🆘 PENGGERA SOS KECEMASAN</button>':''}</div>
- <div class="card" style="margin-bottom:12px"><b id="nxt">—</b><br><span id="qn" style="color:var(--mut);font-size:12px"></span></div>
- ${U.role=='guard'?`<div class="big"><button onclick="doClock('in')" ${OFFMODE?'disabled':''}>Clock In</button><button class="r" onclick="doClock('out')" ${OFFMODE?'disabled':''}>Clock Out</button><button class="b" onclick="scanUI()">Imbas QR Checkpoint</button><button onclick="openForm('Visitors')">Daftar Pelawat</button><button class="g" onclick="openForm('LogBook')">Tulis Log Book</button><button class="g" onclick="incidentUI()">Lapor Insiden / Bahaya</button><button class="g" onclick="goPage('comms')" ${OFFMODE?'disabled':''}>Komunikasi E2EE</button><button class="g" onclick="enrolPasskey()" ${OFFMODE?'disabled':''}>Daftar Kunci Pas Luar Talian</button></div>`:'<div class="card">Akaun admin: gunakan menu kiri. Terminal ini untuk pegawai.</div>'}
- <div class="card" style="background:var(--ink2);color:#fff"><div style="display:flex;justify-content:space-between"><b>Titik Semakan Rondaan</b><span class="bd OK">${tot?Math.round(dn/tot*100):0}% selesai (${dn}/${tot})</span></div><div class="cps" style="margin-top:10px">${cps.map((c,i)=>`<div class="cp ${c.done?'ok':''}"><div><span class="n">${i+1}</span><b>${esc(c.Name)}</b></div><div style="display:flex;justify-content:space-between;align-items:center"><small style="color:#9fb3e8">${c.done?'Diimbas '+esc(c.at.slice(11,16)):'Belum diimbas'}</small><button class="s b" onclick="scanUI()">Imbas Kod QR</button></div></div>`).join('')||'<span style="color:#9fb3e8">Tiada checkpoint. Admin perlu menambah di Checkpoint & QR.</span>'}</div></div>`;tick()}
-async function doClock(t){const m=await guardAct('clock',{type:t},'Clock');if(m&&typeof m=='string')toast(m)}
-async function doSOS(){if(!confirm('Hantar SOS kecemasan kepada pentadbir?'))return;const pos=await getPos();await guardAct('sos',{lat:pos.lat||'',lng:pos.lng||''},'SOS')}
-function incidentUI(){$('#mb').innerHTML=`<h3>Lapor Insiden / Bahaya</h3><label>Jenis</label><select id="it"><option>Pencerobohan</option><option>Kebakaran</option><option>Kecurian</option><option>Kemalangan</option><option>Aktiviti Mencurigakan</option><option>Lain-lain</option></select><label>Butiran</label><textarea id="id" rows=4></textarea><label>Gambar</label><input id="ip" type="file" accept="image/*" capture="environment"><button class="r" onclick="doIncident()">Hantar</button> <button class="g" onclick="closeM()">Batal</button>`;md.style.display='grid'}
-async function doIncident(){const detail=$('#id').value.trim();if(!detail)return toast('Isi butiran.');const photo=await readImg($('#ip'),800),pos=await getPos();if(await guardAct('incident',{type:$('#it').value,detail,photo,lat:pos.lat||'',lng:pos.lng||''},'Insiden'))closeM()}
-const getPos=()=>new Promise(r=>navigator.geolocation?navigator.geolocation.getCurrentPosition(p=>r({lat:p.coords.latitude,lng:p.coords.longitude}),()=>r({}),{timeout:5000,maximumAge:30000}):r({}));
-function scanUI(){$('#mb').innerHTML=`<h3>Imbas QR Checkpoint</h3><div id="rd" style="width:100%"></div><label>Atau taip kod QR</label><input id="mc" placeholder="MSS|C...|..."><label>Catatan</label><input id="mr"><label>Gambar bukti</label><input id="mp" type="file" accept="image/*" capture="environment"><button onclick="doScan($('#mc').value)">Hantar</button> <button class="g" onclick="closeM()">Batal</button>`;md.style.display='grid';
- if(window.Html5Qrcode){QR=new Html5Qrcode('rd');QR.start({facingMode:'environment'},{fps:10,qrbox:200},c=>{if($('#mc').value!=c){$('#mc').value=c;toast('QR dikesan')}}).catch(()=>{$('#rd').textContent='Kamera tidak tersedia, taip kod secara manual.'})}}
-async function doScan(code){code=(code||'').trim();if(!code)return toast('Imbas atau taip kod QR');const photo=await readImg($('#mp'),800),remark=$('#mr').value,pos=await getPos();
- const r=await guardAct('scan',{code,remark,photo,lat:pos.lat||'',lng:pos.lng||''},'Imbasan');if(r){closeM();if(PAGE=='Patrol')goPage('Patrol')}}
-
-/* ---------- baris gilir luar talian ---------- */
-function qget(){return ls('q')||[]}function qset(a){ls('q',a)}function qn(){const e=$('#qn');if(e){const n=qget().filter(x=>U&&x.uid==U.id).length;e.textContent=n?n+' tindakan menunggu penyegerakan':''}}
-async function guardAct(fn,a,label){
- if(OFFMODE||!navigator.onLine){return offAct(fn,a,label)}
- const r=await rpc(fn,a);if(r===null&&NETFAIL){return offAct(fn,a,label)}
- if(r===null)return null;
- if(fn=='scan'){setST(r.st);toast(r.msg);tick();if(PAGE=='term')showTerm();return r.msg}
- if(fn=='sos'||fn=='incident')toast(r);else if(fn!='clock')toast('Disimpan');
- if(fn=='clock'&&r){CLK=r}return r}
-let CLK='';
-function offAct(fn,a,label){if(!U||U.role!='guard'){toast('Tiada sambungan.');return null}
- if(fn=='clock'){toast('Clock In/Out memerlukan sambungan internet.');return null}
- const q=qget();if(q.length>=60){toast('Baris gilir penuh. Sambung ke internet.');return null}
- if(fn=='scan'){const cp=(ST&&ST.cps||[]).find(c=>c.QRCode==a.code);if(!cp){toast('Kod QR tidak dikenali (luar talian).');return null}if(cp.done){toast('Checkpoint ini sudah diimbas.');return null}cp.done=true;cp.at=new Date().toISOString().replace('T',' ').slice(0,19);ST.done=ST.cps.filter(c=>c.done).length;ST.started=true;ls('st_'+U.id,ST)}
- q.push({uid:U.id,fn,a:Object.assign({},a,fn=='sos'?{offline:1}:{}),ts:Date.now(),label});try{qset(q)}catch(e){toast('Storan peranti penuh.');return null}
- toast(label+' disimpan luar talian ('+q.length+' menunggu)');if(PAGE=='term')showTerm();closeM();return 'queued'}
-async function syncQ(){const q=qget();if(!q.length||!U)return;const keep=[];let ok=0,bad=0,stop=false;
- for(const it of q){if(stop||it.uid!=U.id){keep.push(it);continue}const a=Object.assign({},it.a);if(it.fn=='scan')a.ts=it.ts;
-  const r=await rpc(it.fn,a,1);if(r===null&&NETFAIL){stop=true;keep.push(it)}else if(r===null){bad++}else ok++}
- qset(keep);if(ok||bad)toast('Penyegerakan: '+ok+' berjaya'+(bad?', '+bad+' ditolak pelayan':''))}
-window.addEventListener('online',()=>{if(U&&T)syncQ()});
-
-/* ---------- kunci pas luar talian ---------- */
-const b64=b=>btoa(String.fromCharCode(...new Uint8Array(b))),unb64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
-async function pbk(pin,salt){const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pin),'PBKDF2',false,['deriveBits']);return b64(await crypto.subtle.deriveBits({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},k,256))}
-function cacheProfile(){if(!U||U.role!='guard')return;const a=(ls('pf')||[]).find(p=>p.uid==U.id);if(a){a.user=U;a.st=ST;a.at=Date.now();ls('pf',(ls('pf')||[]).map(p=>p.uid==U.id?a:p))}}
-async function enrolPasskey(){if(!U||U.role!='guard')return;const prof={uid:U.id,user:U,st:ST,at:Date.now()};
- try{if(!window.PublicKeyCredential)throw 0;const cr=await navigator.credentials.create({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),rp:{name:'Mega Safe'},user:{id:new TextEncoder().encode(U.id),name:U.name,displayName:U.name},pubKeyCredParams:[{type:'public-key',alg:-7},{type:'public-key',alg:-257}],authenticatorSelection:{authenticatorAttachment:'platform',userVerification:'required'},timeout:60000}});prof.mode='webauthn';prof.cred=b64(cr.rawId)}
- catch(e){const pin=prompt('Biometrik/kunci pas tidak tersedia pada peranti ini. Tetapkan PIN peranti (minimum 6 digit) untuk mod luar talian:');if(!pin||pin.length<6)return toast('Dibatalkan');const salt=crypto.getRandomValues(new Uint8Array(16));prof.mode='pin';prof.salt=b64(salt);prof.hash=await pbk(pin,salt)}
- const all=(ls('pf')||[]).filter(p=>p.uid!=U.id);all.push(prof);ls('pf',all);await rpc('passkeyMark');toast('Kunci pas luar talian didaftarkan ('+(prof.mode=='webauthn'?'biometrik':'PIN peranti')+').')}
-async function offlineLogin(){const pf=(ls('pf')||[]).filter(p=>Date.now()-p.at<14*864e5);if(!pf.length)return toast('Tiada kunci pas. Daftar semasa dalam talian (Terminal > Daftar Kunci Pas).');
- let p=pf[0];if(pf.length>1){const n=prompt('Pilih nombor:\n'+pf.map((x,i)=>(i+1)+'. '+x.user.name).join('\n'));p=pf[(+n||1)-1];if(!p)return}
- try{if(p.mode=='webauthn'){await navigator.credentials.get({publicKey:{challenge:crypto.getRandomValues(new Uint8Array(32)),allowCredentials:[{type:'public-key',id:unb64(p.cred)}],userVerification:'required',timeout:60000}})}
- else{const pin=prompt('PIN peranti:');if(!pin)return;if(await pbk(pin,unb64(p.salt))!==p.hash)return toast('PIN peranti salah.')}}catch(e){return toast('Pengesahan dibatalkan / gagal.')}
- OFFMODE=true;U=p.user;ST=p.st||ls('st_'+p.uid);if(ST)OFF=0;$('#login').style.display='none';$('#app').style.display='block';$('#usr').textContent=U.name+' (luar talian)';$('#off').style.display='block';$('#sir').style.display='none';$('#bell').style.display='none';buildNav();wake();goPage('term');pollLoop()}
-
-/* ---------- enjin alarm ---------- */
-let ringT=0,ALM=false;
-function tick(){if(!U)return;$('#clk').textContent=new Date(nowS()).toLocaleString('ms-MY',{timeZone:'Asia/Kuala_Lumpur',hour12:false});
- if(U.role!='guard'||!ST)return;const s=ST,n=nowS(),nx=$('#nxt');qn();
- const ring=s.on&&!s.started&&n>=s.due&&n<s.due+s.alarmSec*1000,missed=s.on&&!s.started&&n>=s.due+s.alarmSec*1000;
- const bar=$('#alm');
- if(ring||missed){bar.style.display='flex';bar.className=ring?'':'q';$('#almT').textContent=ring?'⏰ MASA RONDA! Imbas checkpoint untuk menghentikan alarm ('+Math.max(0,Math.ceil((s.due+s.alarmSec*1000-n)/1000))+'s)':'⚠ Rondaan tertunggak. Imbas checkpoint sekarang.';if(ring&&Date.now()-ringT>1800){ringT=Date.now();beep(2)}}
- else bar.style.display='none';
- if(nx){nx.textContent=!s.on?'Tiada rondaan aktif (belum Clock In / luar waktu aktif)':(s.started?'Rondaan sedang dilakukan':(n<s.due?'Rondaan seterusnya dalam '+fmtD(s.due-n):'Rondaan tertunggak'))}}
-const fmtD=ms=>{const s=Math.ceil(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60);return (h?h+'j ':'')+String(m).padStart(2,'0')+'m '+String(s%60).padStart(2,'0')+'s'};
-setInterval(tick,1000);
-
-/* ---------- masa nyata (polling) ---------- */
-let polling=false;
-async function pollLoop(){if(polling)return;polling=true;
- while(U){await new Promise(r=>setTimeout(r,U.role=='admin'?5000:8000));if(!U)break;if(OFFMODE||!T||document.hidden&&U.role=='admin')continue;
-  const d=await rpc('poll',{},1);if(!d)continue;OFF=d.now-Date.now();
-  if(d.st){const old=ST;setST(d.st);if(PAGE=='term'&&md.style.display!='grid'&&(!old||old.done!=d.st.done||old.started!=d.st.started))showTerm()}
-  if(d.threats){const b=$('#bn');b.style.display=d.threats.length?'':'none';b.textContent=d.threats.length;let fresh=false;d.threats.forEach(t=>{if(!SEEN[t.ThreatID]){SEEN[t.ThreatID]=1;if(POLLN>0)fresh=true}});if(fresh){beep(4);toast('🚨 Ancaman baharu: '+d.threats[0].Type+' @ '+d.threats[0].Premise)}}
-  POLLN++;
-  if(d.ver!==LASTVER){const first=LASTVER==='';LASTVER=d.ver;if(!first&&md.style.display!='grid'&&['dash','Patrol','Attendance','Visitors','LogBook','Threats','Checkpoints'].includes(PAGE))goPage(PAGE)}
-  if(PAGE=='comms'&&md.style.display!='grid')commsLoad()}
- polling=false}
-
-/* ---------- tetapan & kata laluan ---------- */
-async function showSettings(){const s=await rpc('getSettings');if(!s)return;const g=await rpc('list',{sheet:'Guards'});if(!g)return;GL=(g.rows||[]).map(x=>({id:x.GuardID,name:x.Name,staff:x.StaffNo}));
- $('#c').innerHTML=`<div class="hero"><div><h2>Tetapan Keselamatan & Pengurusan Kata Laluan (RBAC)</h2><p>Hanya Pentadbir boleh menukar kata laluan pegawai dan sistem. Pegawai tidak mempunyai akses menukar kata laluan.</p></div></div>
- <div class="two"><div class="card"><h3>Penukaran Kata Laluan Pegawai & Pentadbir</h3><label>Pilih akaun</label><select id="pt"><option value="admin">Administrator (admin)</option>${GL.map(x=>`<option value="${esc(x.id)}">${esc(x.name)} (${esc(x.staff)})</option>`).join('')}</select><label>Kata laluan baharu</label><input id="pn" type="password" placeholder="Minimum 8 aksara" autocomplete="new-password"><label>Sahkan kata laluan baharu</label><input id="pc" type="password" autocomplete="new-password"><button style="width:100%" onclick="setPin()">Simpan Kata Laluan</button></div>
- <div class="card"><h3>Google Sheets, Amaran & Peta</h3><label>Google Sheet (pangkalan data & log masa nyata)</label><div class="mono" style="word-break:break-all"><a href="${esc(s.sheetUrl)}" target="_blank">${esc(s.sheetUrl)}</a></div><label style="margin-top:8px">URL Web App</label><div class="mono" style="word-break:break-all">${esc(s.execUrl)}</div>
- <label style="margin-top:8px">Emel amaran ancaman (dihantar automatik)</label><input id="ae" value="${esc(s.alertEmail)}" placeholder="pentadbir@syarikat.com">
- <label>Google Maps API Key ${s.hasMapsKey?'(sedia ada: '+esc(s.mapsKeyMasked)+')':''}</label><input id="mk" placeholder="${s.hasMapsKey?'Kosongkan jika tidak mahu tukar':'AIza... (pilihan; tanpa key peta asas dipaparkan)'}">
- <div>Pemantau rondaan latar belakang: <span class="bd ${s.triggers?'OK':'Pending'}">${s.triggers?'Dipasang':'Belum dipasang'}</span> <small>(menu Sheet: Mega Safe > Pasang pemantau)</small></div>
- <div style="margin-top:8px"><button class="k" onclick="saveSet()">Simpan Tetapan</button> <button class="g" onclick="rotHook()">${s.webhook?'Jana semula':'Jana'} rahsia Webhook IoT</button></div></div></div>
- <div class="card" style="margin-top:14px"><h3>Status Pengesahan Dua Faktor (2FA)</h3><div class="cps"><div class="cp" style="background:#fff;color:var(--ink);border-color:#e0e5f0"><b>Administrator</b><span class="bd ${s.totp?'OK':'Critical'}">${s.totp?'2FA Aktif':'Belum aktif'}</span>${s.totp?'':'<button class="s" onclick="enrol2FA()">Aktifkan 2FA</button>'}</div>
- ${(g.rows||[]).map(x=>`<div class="cp" style="background:#fff;color:var(--ink);border-color:#e0e5f0"><b>${esc(x.Name)}</b><small>${esc(x.StaffNo)} · ${esc(x.Premise)}</small>${x.TotpOn=='1'?`<span class="bd OK">2FA Aktif</span><button class="s g" onclick="g2fa('${esc(x.GuardID)}',0)">Nyahaktif</button>`:`<button class="s g" onclick="g2fa('${esc(x.GuardID)}',1)">Aktifkan 2FA</button>`}</div>`).join('')}</div></div>`}
-async function setPin(){const m=await rpc('setPin',{target:$('#pt').value,pin:$('#pn').value,confirm:$('#pc').value});if(m){toast(m);$('#pn').value='';$('#pc').value='';if($('#pt').value=='admin')setTimeout(()=>location.reload(),1800)}}
-async function saveSet(){const o={alertEmail:$('#ae').value};if($('#mk').value.trim())o.mapsKey=$('#mk').value;if(await rpc('saveSettings',o)){MAPK=null;toast('Tetapan disimpan');showSettings()}}
-async function rotHook(){if(!confirm('Jana rahsia baharu? Rahsia lama tidak sah lagi.'))return;const r=await rpc('saveSettings',{rotateWebhook:1});if(r&&r.webhookSecret){$('#mb').innerHTML=`<h3>Rahsia Webhook IoT</h3><p>Simpan sekarang; tidak akan dipaparkan lagi.</p><div class="mono" style="word-break:break-all;background:#f2f4f8;padding:8px">${esc(r.webhookSecret)}</div><p style="font-size:12px">POST JSON ke URL Web App: {"secret":"…","premise":"Nama Premis","type":"Pintu dibuka","severity":"High","detail":"…"}</p><button onclick="closeM()">Tutup</button>`;md.style.display='grid'}}
-async function g2fa(id,on){if(!confirm(on?'Aktifkan 2FA untuk pegawai ini? Pegawai wajib mendaftar kod dalam aplikasi Authenticator sebelum log masuk seterusnya.':'Nyahaktifkan 2FA pegawai ini?'))return;const r=await rpc('guard2fa',{id,on});if(!r)return;
- if(r.secret){$('#mb').innerHTML=`<h3>2FA: ${esc(r.name)}</h3><p>Tunjukkan kod QR ini kepada pegawai untuk diimbas dalam Authenticator. Ia tidak akan dipaparkan lagi.</p><div style="text-align:center"><img src="${qrimg(r.uri,5)}"><p class="mono">${esc(r.secret)}</p></div><button onclick="closeM();showSettings()">Selesai</button>`;md.style.display='grid'}else{toast('2FA dinyahaktifkan');showSettings()}}
-
-/* ---------- komunikasi E2EE (AES-GCM; pelayan hanya melihat teks sulit) ---------- */
-let CPREM='';
-async function ckey(prem){const pw=ls('ck_'+prem);if(!pw)return null;const km=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:new TextEncoder().encode('MegaSafe|'+prem),iterations:150000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
-function showComms(){CPREM=U.role=='admin'?(CPREM||PREM[0]||''):U.premise;
- $('#c').innerHTML=`<div class="hero"><div><h2>Komunikasi Disulitkan Hujung-ke-Hujung</h2><p>Mesej disulitkan dalam pelayar (AES-256-GCM). Pelayan & Google Sheet hanya menyimpan teks sulit. Kongsi frasa kunci premis secara lisan/bersemuka.</p></div></div>
- ${U.role=='admin'?`<label>Premis</label><select onchange="CPREM=this.value;commsLoad()">${PREM.map(p=>`<option ${p==CPREM?'selected':''}>${esc(p)}</option>`).join('')}</select>`:''}
- <div class="card" style="margin:8px 0"><label>Frasa kunci premis ${ls('ck_'+CPREM)?'(telah ditetapkan pada peranti ini)':'(belum ditetapkan)'}</label><div style="display:flex;gap:8px"><input id="ckp" type="password" placeholder="Masukkan frasa kunci (min 10 aksara)" style="margin:0"><button onclick="setCK()">Simpan</button></div></div>
- <div class="card"><div id="ml" style="max-height:340px;overflow:auto"></div><div style="display:flex;gap:8px;margin-top:8px"><input id="mt" placeholder="Tulis mesej..." style="margin:0" onkeydown="if(event.key=='Enter')sendMsg()"><button onclick="sendMsg()">Hantar</button></div></div>`;commsLoad()}
-function setCK(){const v=$('#ckp').value;if(v.length<10)return toast('Frasa minimum 10 aksara.');ls('ck_'+CPREM,v);toast('Kunci disimpan pada peranti ini');showComms()}
-async function commsLoad(){const l=$('#ml');if(!l)return;const r=await rpc('msgList',{premise:CPREM},1);if(!r)return;const k=await ckey(CPREM);const out=[];
- for(const m of r){let t='🔒 (tetapkan frasa kunci)';if(k){try{t=new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:unb64(m.IV)},k,unb64(m.Cipher)))}catch(e){t='🔒 (frasa kunci tidak sepadan)'}}
-  out.push(`<div class="msg ${m.FromID==U.id?'me':''}"><small>${esc(m.FromName)} · ${esc(m.Timestamp.slice(5,16))}</small><br>${esc(t)}</div>`)}
- const at=l.scrollTop+l.clientHeight>=l.scrollHeight-30;l.innerHTML=out.join('')||'<span style="color:var(--mut)">Tiada mesej.</span>';if(at)l.scrollTop=l.scrollHeight}
-async function sendMsg(){const t=$('#mt').value.trim();if(!t)return;const k=await ckey(CPREM);if(!k)return toast('Tetapkan frasa kunci dahulu.');const iv=crypto.getRandomValues(new Uint8Array(12));
- const c=await crypto.subtle.encrypt({name:'AES-GCM',iv},k,new TextEncoder().encode(t));if(await rpc('msgSend',{premise:CPREM,iv:b64(iv),cipher:b64(c)})){$('#mt').value='';commsLoad()}}
-</script></body></html>
+<script src="js/app.js"></script>
+</body></html>

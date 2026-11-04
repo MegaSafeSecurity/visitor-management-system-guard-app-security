@@ -1,14 +1,10 @@
-// Semakan sintaks pantas (tanpa Apps Script): node scripts/check.js
+// Semakan sintaks: node scripts/check.js  (jalankan selepas node scripts/build.js)
 const fs = require('fs'), vm = require('vm'), path = require('path');
-const root = path.join(__dirname, '..');
-let bad = 0;
-function chk(name, code) {
-  try { new vm.Script(code, { filename: name }); console.log('OK  ' + name); }
-  catch (e) { bad++; console.error('GAGAL ' + name + ': ' + e.message); }
-}
-chk('Code.gs', fs.readFileSync(path.join(root, 'Code.gs'), 'utf8'));
-const html = fs.readFileSync(path.join(root, 'Index.html'), 'utf8');
-const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m => m[1]);
-scripts.forEach((s, i) => chk('Index.html <script> #' + (i + 1), s));
-if (!fs.existsSync(path.join(root, 'Logo.html'))) { bad++; console.error('GAGAL Logo.html tiada'); }
+const root = path.join(__dirname, '..'); let bad = 0;
+function chk(name, code) { try { new vm.Script(code, { filename: name }); console.log('OK  ' + name); } catch (e) { bad++; console.error('GAGAL ' + name + ': ' + e.message); } }
+['apps-script/Code.gs', 'js/app.js', 'js/config.js', 'sw.js'].forEach(f => chk(f, fs.readFileSync(path.join(root, f), 'utf8')));
+JSON.parse(fs.readFileSync(path.join(root, 'manifest.json'), 'utf8')); JSON.parse(fs.readFileSync(path.join(root, 'apps-script/appsscript.json'), 'utf8')); console.log('OK  manifest.json, appsscript.json');
+const h = fs.readFileSync(path.join(root, 'apps-script/Index.html'), 'utf8');
+[...h.matchAll(/<script>([\s\S]*?)<\/script>/g)].forEach((m, i) => chk('apps-script/Index.html <script> #' + (i + 1), m[1]));
+if (/<\?!?=|\{\{LOGO\}\}|src="img\/|href="css\/|src="js\//.test(h)) { bad++; console.error('GAGAL apps-script/Index.html masih merujuk fail luar'); }
 process.exit(bad ? 1 : 0);

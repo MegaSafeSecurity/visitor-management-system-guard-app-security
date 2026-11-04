@@ -1,1 +1,4 @@
-{ "scriptId": "TEMPAT_SCRIPT_ID_ANDA", "rootDir": "src" }
+{
+  "scriptId": "GANTI_DENGAN_SCRIPT_ID_ANDA",
+  "rootDir": "apps-script"
+}

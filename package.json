@@ -1,15 +1,19 @@
 {
   "name": "megasafe-guard-system",
-  "version": "6.0.0",
+  "version": "5.0.0",
   "private": true,
-  "description": "Mega Safe Security Services Sdn Bhd - Guard Tour, VMS, Security Log Book (Google Sheets + Apps Script)",
+  "description": "Mega Safe Security Services Sdn Bhd - Guard Tour, VMS & Security Log Book (GitHub Pages + Google Apps Script)",
   "scripts": {
-    "build": "node scripts/build-single.js",
-    "test": "node tests/server.test.js",
+    "build": "node scripts/build.js",
+    "check": "node scripts/build.js && node scripts/check.js",
+    "test": "node scripts/build.js && node scripts/check.js && node tests/harness.js && node tests/ui.test.js",
     "login": "clasp login",
-    "push": "clasp push",
-    "deploy": "clasp deploy --description \"release\"",
+    "push": "node scripts/build.js && clasp push",
+    "deploy": "clasp deploy --description release",
     "open": "clasp open"
   },
-  "devDependencies": { "@google/clasp": "^2.4.2" }
+  "devDependencies": {
+    "@google/clasp": "^2.4.2",
+    "playwright": "^1.45.0"
+  }
 }
